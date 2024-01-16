@@ -1,6 +1,6 @@
 <template>
   <div class="language-button">
-    <img src="../icons/ArrowDown.png" alt="" />
+    <img src="/icons/ArrowDown.png" alt="" />
   </div>
 </template>
 

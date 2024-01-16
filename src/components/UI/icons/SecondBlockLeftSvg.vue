@@ -87,9 +87,7 @@
 
 <script>
 export default {
-  setup() {
-    return {};
-  },
+  name: "SecondBlockLeftSvg",
 };
 </script>
 
