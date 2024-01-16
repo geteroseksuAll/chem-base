@@ -1,11 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainPage from "@/pages/MainPage.vue";
+import CatalogItem from "../pages/CatalogItem";
 
 const routes = [
   {
     path: "/",
     name: "home",
     component: MainPage,
+  },
+  {
+    path: "/catalog",
+    name: "catalog",
+    component: "Catalog",
+  },
+  {
+    path: "/catalog/:id",
+    name: "catalog_item",
+    component: CatalogItem,
   },
 ];
 
