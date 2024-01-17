@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainPage from "@/pages/MainPage.vue";
-import CatalogItem from "../pages/CatalogItem.vue";
 
 const routes = [
   {
@@ -12,11 +11,6 @@ const routes = [
     path: "/catalog",
     name: "catalog",
     component: "Catalog",
-  },
-  {
-    path: "/catalog/:id",
-    name: "catalog_item",
-    component: CatalogItem,
   },
 ];
 
