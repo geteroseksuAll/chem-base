@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="main-section-block">
-      <div class="main-section-upper">
+      <div class="main-section_upper">
         <div class="katalog-products-block">
           <div class="first-block-svg">
             <FirstBlockSvg />
@@ -20,24 +20,24 @@
       </div>
     </div>
     <div class="second-section-block">
-      <div class="second-section-content">
-        <div class="second-section-upper">
+      <div class="second-section_content">
+        <div class="second-section_upper">
           <SecondSectionBlockRightSvg class="second-section-upper-img" />
-          <p class="second-section-upper-text bottom-text">
+          <p class="second-section_upper__text bottom-text">
             удобно искать <br />— выгодно покупать.
           </p>
         </div>
-        <div class="second-section-middle">
+        <div class="second-section_middle">
           <SecondSectionBlockLeftSvg class="second-section-bottom-img" />
-          <p class="second-section-middle-text">
+          <p class="second-section_middle__text">
             Химические реагенты и товары для химических лабораторий
           </p>
           <button type="button" class="second-section-middle-button green-bttn">
-            <p class="second-section-middle-button-text">Зарегистрироваться</p>
+            <p class="second-section_middle__button-text">Зарегистрироваться</p>
           </button>
         </div>
-        <div class="second-section-bottom">
-          <p class="second-section-bottom-text">
+        <div class="second-section_bottom">
+          <p class="second-section_bottom__text">
             <span class="green-text">+</span>
             доставка в любую<br />
             точку мира.*
@@ -76,7 +76,7 @@ export default {
   border-radius: 64px;
   background: var(--Base, #14d8b5);
 }
-.second-section-middle-button-text {
+.second-section_middle__button-text {
   color: var(--gray-bg, #f7f7f7);
 
   font-size: 16px;
@@ -86,7 +86,7 @@ export default {
   letter-spacing: 0.32px;
   text-transform: uppercase;
 }
-.second-section-bottom-text {
+.second-section_bottom__text {
   margin: 0 0 0 57%;
   padding-bottom: 60px;
   color: var(--black-base, #2c2c2c);
@@ -102,10 +102,10 @@ export default {
   position: absolute;
   left: 5%;
 }
-.second-section-bottom {
+.second-section_bottom {
   display: flex;
 }
-.second-section-middle {
+.second-section_middle {
   display: flex;
   flex-direction: wrap;
   margin-left: 20%;
@@ -114,7 +114,7 @@ export default {
   position: absolute;
   right: 5%;
 }
-.second-section-middle-text {
+.second-section_middle__text {
   max-width: 260px;
   color: var(--gray-heavy, #808080);
   font-size: 18px;
@@ -122,7 +122,7 @@ export default {
   font-weight: 400;
   line-height: 21px; /* 116.667% */
 }
-.second-section-upper-text {
+.second-section_upper__text {
   margin: 32px 0 78px 32px;
 }
 .bottom-text {
@@ -132,7 +132,7 @@ export default {
   font-weight: 550;
   line-height: 68px; /* 106.25% */
 }
-.second-section-content {
+.second-section_content {
   width: 90%;
   display: flex;
   justify-content: space-between;
@@ -172,7 +172,7 @@ export default {
   border-radius: 4px;
   background: var(--gray-bg, #f7f7f7);
 }
-.main-section-upper {
+.main-section_upper {
   display: flex;
   justify-content: space-between;
   text-align: center;

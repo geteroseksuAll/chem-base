@@ -1,8 +1,4 @@
-import Vue from "vue";
-import Vuex from "vuex";
 import { createStore } from "vuex";
-
-Vue.use(Vuex);
 
 const store = new createStore({
   state: {
@@ -20,6 +16,7 @@ const store = new createStore({
         variants: "1л.,18кг.",
         qualification: "ХЧ (химически чистый)",
         gost: "ГОСТ 4204-77",
+        img: "/icons/test_image.png",
       },
       {
         id: 2,
@@ -34,6 +31,7 @@ const store = new createStore({
         variants: "1л.,18кг.",
         qualification: "ХЧ (химически чистый)",
         gost: "ГОСТ 4204-77",
+        img: "/icons/test_image.png",
       },
       {
         id: 3,
@@ -48,6 +46,22 @@ const store = new createStore({
         variants: "1л.,18кг.",
         qualification: "ХЧ (химически чистый)",
         gost: "ГОСТ 4204-77",
+        img: "/icons/test_image.png",
+      },
+      {
+        id: 4,
+        name: "Калий перманганат num 4",
+        cas: "7722-64-7",
+        formula: "KMnO4",
+        price: "2000",
+        danger_status: "Да",
+        country: "Россия",
+        package: "84",
+        type_of_product: "Кислота",
+        variants: "1л.,18кг.",
+        qualification: "ХЧ (химически чистый)",
+        gost: "ГОСТ 4204-77",
+        img: "/icons/test_image.png",
       },
     ],
   },

@@ -17,8 +17,8 @@
         />
       </div>
       <div class="header-lang-section">
-        <p class="current-lang-text">RU</p>
-        <div class="current-lang-button">
+        <p class="current-lang_text">RU</p>
+        <div class="current-lang_button">
           <HeaderLangButton />
         </div>
       </div>
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.current-lang-text {
+.current-lang_text {
   margin-right: 5px;
   color: var(--Base, #14d8b5);
 
