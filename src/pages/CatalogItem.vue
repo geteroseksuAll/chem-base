@@ -42,9 +42,63 @@
           </div>
           <div class="item-main_price_block">
             <div class="item-main_price_menu">
-              <div class="item_cas">{{ this.items_data.item_cas }}</div>
-              <div class="item_formula"></div>
-              <div class="item_buy-menu"></div>
+              <div class="item_cas item_text">
+                <div class="name_info_top_items">
+                  <p class="name_info_text">CAS</p>
+                  <div class="top_item_info_svg">
+                    <CatalogItemPropertiesSvg />
+                  </div>
+                </div>
+                <p class="name_info_description">
+                  {{ this.items_data.item_cas }}
+                </p>
+                <div class="name_info_bottom_items">
+                  <div class="bottom_item_info_svg">
+                    <CatalogItemPropertiesSvg />
+                  </div>
+                  <div class="copy_button_svg">
+                    <CopySvgButton />
+                  </div>
+                </div>
+              </div>
+              <div class="item_cas item_text">
+                <div class="name_info_top_items">
+                  <p class="name_info_text">ФОРМУЛА</p>
+                  <div class="top_item_info_svg">
+                    <CatalogItemPropertiesSvg />
+                  </div>
+                </div>
+                <p class="name_info_description">
+                  {{ this.items_data.item_formula }}
+                </p>
+                <div class="name_info_bottom_items">
+                  <div class="bottom_item_info_svg">
+                    <CatalogItemPropertiesSvg />
+                  </div>
+                  <div class="copy_button_svg">
+                    <CopySvgButton />
+                  </div>
+                </div>
+              </div>
+              <div class="item_buy-menu">
+                <div class="item_buy-menu_content">
+                  <div class="item_buy-menu_top">
+                    <StatisticsSvgButton />
+                    <p
+                      class="status_buy-menu_top"
+                      :style="{ background: this.types.orderOnly.bg }"
+                    >
+                      {{ this.types.orderOnly.title }}
+                    </p>
+                    <HeartIcon />
+                  </div>
+                  <div class="item_buy-menu_bottom">
+                    <p class="item_current_price">
+                      {{ this.items_data.currentPrice }}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -54,9 +108,44 @@
 </template>
 
 <script>
-import HeaderLangButton from "@/components/UI/icons/HeaderLangButton.vue";
+import {
+  StatisticsSvgButton,
+  CopySvgButton,
+  CatalogItemPropertiesSvg,
+  HeaderLangButton,
+  HeartIcon,
+} from "@/components/UI";
 export default {
   name: "CatalogItem",
+  data() {
+    const types = {
+      aLotOfItems: {
+        title: "МНОГО В НАЛИЧИИ",
+        bg: "rgba(20, 216, 181, 0.10)",
+      },
+      fewOfItems: {
+        title: "МАЛО В НАЛИЧИИ",
+        bg: "rgba(216, 126, 20, 0.10)",
+      },
+      onStock: {
+        title: "НА СКЛАДЕ",
+        bg: "rgba(216, 197, 20, 0.10)",
+      },
+      orderOnly: {
+        title: "ПОД ЗАКАЗ",
+        bg: "rgba(60, 20, 216, 0.10)",
+      },
+      outOfStock: {
+        title: "НЕТ В НАЛИЧИИ",
+        bg: "rgba(216, 20, 20, 0.10)",
+      },
+      comingSoon: {
+        title: "СКОРО ПОЯВИТСЯ",
+        bg: "rgba(20, 87, 216, 0.10);",
+      },
+    };
+    return { types };
+  },
   computed: {
     id() {
       console.log(this.$route.params.id);
@@ -105,19 +194,110 @@ export default {
       return items_list;
     },
   },
-  components: { HeaderLangButton },
+  components: {
+    HeaderLangButton,
+    CatalogItemPropertiesSvg,
+    CopySvgButton,
+    StatisticsSvgButton,
+    HeartIcon,
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.popular_item_img {
-  width: 200px;
-  height: 200px;
+.status_buy-menu_top {
+  color: var(--gray-heavy, #808080);
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px; /* 133.333% */
+  padding: 20px 60px;
 }
-.popular_items_list {
+
+.item_buy-menu {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid var(--gray-UI, #cdcdcd);
+}
+.item_buy-menu_top {
   display: flex;
   justify-content: space-between;
-  width: 64%;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.copy_button_svg {
+  margin: 0 10px 0 0;
+}
+.name_info_bottom_items {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.name_info_top_items {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+.name_info_description {
+  text-align: center;
+  color: var(--black-base, #2c2c2c);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; /* 100% */
+}
+.top_item_info_svg {
+  transform: rotate(180deg);
+  display: flex;
+  object-position: right top;
+}
+.name_info_text {
+  text-align: left;
+  color: var(--gray-heavy, #808080);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14px; /* 100% */
+}
+.item_text {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+.name_info {
+  width: 100%;
+  text-align: left;
+}
+.item-main_price_menu {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.item-main_price_block {
+  display: flex;
+  justify-content: center;
+  width: 40%;
+}
+.item-main_info {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+.item-page_information {
+  display: flex;
+  flex-direction: row;
+}
+.popular_item_img {
+  width: 100%;
+  height: 105%;
+}
+.popular_items_list {
+  margin: 20px 0 0 0;
+  display: flex;
+  gap: 8px;
 }
 .popular_items_title {
   color: var(--black-base, #2c2c2c);
@@ -133,7 +313,7 @@ ul {
 .item-info_block {
   display: flex;
   justify-content: space-between;
-  width: 60%;
+  width: 90%;
   margin-bottom: 134px;
 }
 .item-info_text {
