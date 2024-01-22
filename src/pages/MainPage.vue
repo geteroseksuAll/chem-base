@@ -32,7 +32,12 @@
           <p class="second-section_middle__text">
             Химические реагенты и товары для химических лабораторий
           </p>
-          <button type="button" class="second-section-middle-button green-bttn">
+          <button
+            type="button"
+            class="second-section-middle-button green-bttn"
+            id="search"
+            @click="postMethod"
+          >
             <p class="second-section_middle__button-text">Зарегистрироваться</p>
           </button>
         </div>
@@ -62,6 +67,9 @@ export default {
     SecondBlockLeftSvg,
     SecondSectionBlockRightSvg,
     SecondSectionBlockLeftSvg,
+  },
+  methods: {
+    postMethod() {},
   },
 };
 </script>

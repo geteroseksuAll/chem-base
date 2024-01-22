@@ -14,8 +14,11 @@
           type="text"
           placeholder="реагента по номеру/названию/коду..."
           name="search"
+          v-model="postData.message"
+          id="message"
         />
       </div>
+      <button type="button" @click="postMethod">Нажми</button>
       <div class="header-lang-section">
         <p class="current-lang_text">RU</p>
         <div class="current-lang_button">
@@ -41,6 +44,9 @@ import {
   HeaderHeartIcon,
 } from "./UI";
 export default {
+  data() {
+    return { postData: { message: "" } };
+  },
   name: "HeaderSection",
   components: {
     HeaderLogo,
@@ -49,6 +55,17 @@ export default {
     HeaderLoginIcon,
     HeaderBasketIcon,
     HeaderHeartIcon,
+  },
+  methods: {
+    postMethod() {
+      fetch("ссылка", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: this.message }),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data));
+    },
   },
 };
 </script>
