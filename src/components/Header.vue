@@ -14,7 +14,7 @@
           type="text"
           placeholder="реагента по номеру/названию/коду..."
           name="search"
-          v-model="postData.message"
+          v-model="postData.fullName"
           id="message"
         />
       </div>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import {
   HeaderLogo,
   HeaderOptions,
@@ -45,7 +46,7 @@ import {
 } from "./UI";
 export default {
   data() {
-    return { postData: { message: "" } };
+    return { postData: { fullName: "" } };
   },
   name: "HeaderSection",
   components: {
@@ -58,13 +59,15 @@ export default {
   },
   methods: {
     postMethod() {
-      fetch("ссылка", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: this.message }),
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data));
+      try {
+        const result = axios.post("ссылка", {
+          params: { fullName: this.postData.fullName },
+        });
+        return result.data;
+      } catch (error) {
+        console.log("showAlert");
+        throw error;
+      }
     },
   },
 };

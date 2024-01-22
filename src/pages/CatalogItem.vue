@@ -96,7 +96,6 @@
                     <p class="item_current_price">
                       {{ this.items_data.currentPrice }}
                     </p>
-                    <div class="privet">привет</div>
                   </div>
                 </div>
               </div>
