@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from "vuex";
 import {
   HeaderLogo,
   HeaderOptions,
@@ -58,16 +58,9 @@ export default {
     HeaderHeartIcon,
   },
   methods: {
+    ...mapActions(["getSearchListRequest"]),
     postMethod() {
-      try {
-        const result = axios.post("ссылка", {
-          params: { fullName: this.postData.fullName },
-        });
-        return result.data;
-      } catch (error) {
-        console.log("showAlert");
-        throw error;
-      }
+      this.getSearchListRequest(this.postData.fullName);
     },
   },
 };

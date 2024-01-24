@@ -36,7 +36,6 @@
             type="button"
             class="second-section-middle-button green-bttn"
             id="search"
-            @click="postMethod"
           >
             <p class="second-section_middle__button-text">Зарегистрироваться</p>
           </button>

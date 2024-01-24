@@ -94,7 +94,7 @@
                   </div>
                   <div class="item_buy-menu_bottom">
                     <p class="item_current_price">
-                      {{ this.items_data.currentPrice }}
+                      {{ this.total_price }} <span> р.</span>
                     </p>
                   </div>
                 </div>
@@ -118,6 +118,9 @@ import {
 export default {
   name: "CatalogItem",
   data() {
+    let total_price = this.$store.state.items.find(
+      (item) => item.id == this.$route.params.id
+    ).price;
     const types = {
       aLotOfItems: {
         title: "МНОГО В НАЛИЧИИ",
@@ -144,7 +147,7 @@ export default {
         bg: "rgba(20, 87, 216, 0.10);",
       },
     };
-    return { types };
+    return { types, total_price };
   },
   computed: {
     id() {
@@ -193,6 +196,7 @@ export default {
       console.log(items_list);
       return items_list;
     },
+    methods: {},
   },
   components: {
     HeaderLangButton,

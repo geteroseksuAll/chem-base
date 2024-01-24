@@ -18,9 +18,7 @@
 
 <script>
 export default {
-  setup() {
-    return {};
-  },
+  name: "StatisticsSvgButton",
 };
 </script>
 

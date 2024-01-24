@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "HeartSvg",
+  name: "HeartIcon",
 };
 </script>
 
