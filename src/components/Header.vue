@@ -18,7 +18,11 @@
           id="message"
         />
       </div>
-      <button type="button" @click="postMethod">Нажми</button>
+      <router-link
+        type="button"
+        :to="{ name: 'catalogSearch', query: { search: postData.fullName } }"
+        >Нажми</router-link
+      >
       <div class="header-lang-section">
         <p class="current-lang_text">RU</p>
         <div class="current-lang_button">
@@ -35,7 +39,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import {
   HeaderLogo,
   HeaderOptions,
@@ -56,12 +59,6 @@ export default {
     HeaderLoginIcon,
     HeaderBasketIcon,
     HeaderHeartIcon,
-  },
-  methods: {
-    ...mapActions(["getSearchListRequest"]),
-    postMethod() {
-      this.getSearchListRequest(this.postData.fullName);
-    },
   },
 };
 </script>
@@ -121,5 +118,6 @@ input {
   background-color: #fff;
   border-radius: 20px;
   border: none;
+  outline: none;
 }
 </style>

@@ -10,13 +10,13 @@ const routes = [
     component: MainPage,
   },
   {
-    path: "/catalog",
-    name: "catalog",
+    path: "/catalog/search",
+    name: "catalogSearch",
     component: CatalogPage,
   },
   {
     path: "/catalog/:id",
-    name: "catalog_item",
+    name: "catalogItem",
     component: CatalogItem,
   },
 ];

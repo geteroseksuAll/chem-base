@@ -11,7 +11,7 @@
         <div class="item-page_information">
           <div class="item-main_info">
             <h1 class="item_title">
-              {{ this.items_data.item_name }}
+              {{ currentItem?.name }}
             </h1>
             <div class="item-info_block">
               <img class="item-info_img" src="/icons/test_image.png" alt="" />
@@ -32,9 +32,17 @@
             <div class="popular_items_block">
               <div class="popular_items_title">ЧАСТО ПОКУПАЮТ</div>
               <ul class="popular_items_list">
-                <li v-for="item in popular_items" :key="item.id">
-                  <router-link :to="{ path: '/catalog/' + item.id }"
-                    ><img class="popular_item_img" :src="item.img" alt=""
+                <li
+                  v-for="item in this.$store.getters.getPopularItemsList"
+                  :key="item.id"
+                >
+                  <router-link
+                    v-if="item.id < 5"
+                    :to="{ path: '/catalog/' + item.id }"
+                    ><img
+                      class="popular_item_img"
+                      src="/icons/test_image.png"
+                      alt=""
                   /></router-link>
                 </li>
               </ul>
@@ -50,7 +58,7 @@
                   </div>
                 </div>
                 <p class="name_info_description">
-                  {{ this.items_data.item_cas }}
+                  {{ currentItem?.casNumber }}
                 </p>
                 <div class="name_info_bottom_items">
                   <div class="bottom_item_info_svg">
@@ -69,7 +77,7 @@
                   </div>
                 </div>
                 <p class="name_info_description">
-                  {{ this.items_data.item_formula }}
+                  {{ currentItem?.formula }}
                 </p>
                 <div class="name_info_bottom_items">
                   <div class="bottom_item_info_svg">
@@ -86,16 +94,72 @@
                     <StatisticsSvgButton />
                     <p
                       class="status_buy-menu_top"
-                      :style="{ background: this.types.orderOnly.bg }"
+                      :style="{ background: types.orderOnly.bg }"
                     >
-                      {{ this.types.orderOnly.title }}
+                      {{ types.orderOnly.title }}
                     </p>
                     <HeartIcon />
                   </div>
                   <div class="item_buy-menu_bottom">
                     <p class="item_current_price">
-                      {{ this.total_price }} <span> р.</span>
+                      {{
+                        currentItem?.price *
+                        currentItemAmount *
+                        currentItemValue
+                      }}
+                      <span class="green-text">xtr</span>
                     </p>
+                    <div class="item_amount_value_choice">
+                      <select
+                        v-model="this.currentItemSystem"
+                        name="value_amount"
+                        id=""
+                        class="value_amount"
+                      >
+                        <option value="kilo">КГ</option>
+                        <option value="gramms">ГРАММ</option>
+                      </select>
+                    </div>
+                    <div class="item_current_amount">
+                      <button
+                        type="button"
+                        class="minus"
+                        id="plus"
+                        @click="minusValue"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="text"
+                        placeholder="КГ"
+                        id="item_amount"
+                        class="amount"
+                        v-model="this.currentItemAmount"
+                      />
+                      <button
+                        class="plus"
+                        id="plus"
+                        type="button"
+                        @click="plusValue"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      class="item_buy_button"
+                      @click="openForm"
+                    >
+                      КУПИТЬ
+                    </button>
+                    <DialogMenu v-model:show="dialogVisible" />
+                    <div class="item_bottom_bonus-text_block">
+                      <p class="item_bottom_bonus-text">
+                        если на вашем аккаунте есть
+                        <span class="blue-text">бонусы</span>, вы сможете
+                        списать их в корзине
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -108,6 +172,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import DialogMenu from "@/components/DialogMenu.vue";
 import {
   StatisticsSvgButton,
   CopySvgButton,
@@ -118,9 +184,10 @@ import {
 export default {
   name: "CatalogItem",
   data() {
-    let total_price = this.$store.state.items.find(
-      (item) => item.id == this.$route.params.id
-    ).price;
+    let currentItemAmount = 1;
+    let currentItemSystem = "КГ";
+    var currentItemValue = 1;
+    var dialogVisible = false;
     const types = {
       aLotOfItems: {
         title: "МНОГО В НАЛИЧИИ",
@@ -147,56 +214,52 @@ export default {
         bg: "rgba(20, 87, 216, 0.10);",
       },
     };
-    return { types, total_price };
+    return {
+      types,
+      currentItemAmount,
+      currentItemSystem,
+      currentItemValue,
+      dialogVisible,
+    };
+  },
+  methods: {
+    ...mapActions(["getPopularItemsRequest"]),
+    openForm() {
+      this.dialogVisible = true;
+    },
+    plusValue() {
+      if (this.currentItemAmount) {
+        this.currentItemAmount = parseInt(this.currentItemAmount) + 1;
+      } else {
+        this.currentItemAmount = 1;
+      }
+    },
+    minusValue() {
+      if (this.currentItemAmount > 0) {
+        this.currentItemAmount = parseInt(this.currentItemAmount) - 1;
+      }
+    },
   },
   computed: {
-    id() {
-      console.log(this.$route.params.id);
-      return this.$route.params.id;
+    currentItem() {
+      const currentItem = this.$store.getters.getPopularItemsList.find(
+        (item) => item.id == this.$route.params.id
+      );
+
+      return currentItem;
     },
-    items_data() {
-      return {
-        item_name: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).name,
-        item_cas: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).cas,
-        item_formula: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).formula,
-        item_price: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).price,
-        item_danger_status: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).danger_status,
-        item_country: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).country,
-        item_package: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).package,
-        item_type_of_product: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).type_of_product,
-        item_variants: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).variants,
-        item_qualification: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).qualification,
-        item_gost: this.$store.state.items.find(
-          (item) => item.id == this.$route.params.id
-        ).gost,
-      };
+  },
+  mounted() {
+    this.getPopularItemsRequest();
+  },
+  watch: {
+    currentItemSystem() {
+      if (this.currentItemSystem == "kilo") {
+        this.currentItemValue = 1;
+      } else {
+        this.currentItemValue = 0.001;
+      }
     },
-    popular_items() {
-      let items_list = this.$store.state.items.slice(0, 4);
-      console.log(items_list);
-      return items_list;
-    },
-    methods: {},
   },
   components: {
     HeaderLangButton,
@@ -204,11 +267,101 @@ export default {
     CopySvgButton,
     StatisticsSvgButton,
     HeartIcon,
+    DialogMenu,
   },
 };
 </script>
 
 <style lang="scss" scoped>
+select {
+  display: flex;
+  justify-content: space-between;
+  background-image: url("../components/UI/icons/ArrowDown.png");
+  background-position: 90% 50%;
+  color: var(--black-base, #2c2c2c);
+  font-size: 20px;
+  font-weight: 550;
+  line-height: 22px; /* 137.5% */
+  text-transform: uppercase;
+  width: 200px;
+  padding: 10px 0 10px 20px;
+}
+
+.item_amount_value_choice {
+  margin-top: 20px;
+
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid var(--gray-UI, #cdcdcd);
+}
+.item_bottom_bonus-text_block {
+  display: flex;
+  justify-content: center;
+  max-width: 200px;
+  margin-bottom: 30px;
+}
+.item_bottom_bonus-text {
+  color: var(--gray-heavy, #808080);
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px; /* 133.333% */
+  span {
+    color: var(--Blue, #216ee3);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+  }
+}
+.item_buy_button {
+  color: var(--gray-bg, #f7f7f7);
+  text-align: center;
+  font-size: 16px;
+  font-weight: 550;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  padding: 20px 80px;
+  border-radius: 64px;
+  background: var(--Base, #14d8b5);
+  margin-bottom: 50px;
+}
+.amount {
+  width: 110px;
+  height: 32px;
+  padding: 30px;
+  margin: 0 20px;
+  outline: none;
+  text-align: center;
+}
+.item_current_amount {
+  margin: 150px 0 30px 0;
+  border-radius: 4px;
+  border: 1px solid var(--gray-UI, #cdcdcd);
+  width: 50%;
+  font-size: 30px;
+}
+
+.item_buy-menu_bottom {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+.item_current_price {
+  font-size: 32px;
+  font-weight: 550;
+  line-height: 64px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+.green-text {
+  color: #14d8b5;
+}
 .status_buy-menu_top {
   color: var(--gray-heavy, #808080);
   text-align: center;

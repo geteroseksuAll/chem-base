@@ -3,28 +3,41 @@ import store from "..";
 export default {
   state: {
     searchList: null,
+    popularItemsList: [],
   },
   getters: {
-    getSearchList: ({ searchList }) => searchList?.items,
+    getSearchList: ({ searchList }) => searchList,
+    getPopularItemsList: ({ popularItemsList }) => popularItemsList,
   },
   mutations: {
     changeSearchList(state, data) {
       state.searchList = data;
     },
+    changePopularItemsList(state, data) {
+      state.popularItemsList = data;
+    },
   },
   actions: {
-    async getSearchListRequest(context, str) {
-      console.log(str);
+    async getPopularItemsRequest() {
+      console.log("работает");
+      const result = await axios.get("http://localhost:7000/api/v1/catalog");
+      const listOfPopularItems = result.data;
 
-      const result = await axios.post("http://localhost:7000/api/v1", str);
-      console.log(str);
-      console.log(result.data);
+      store.commit("changePopularItemsList", listOfPopularItems);
+      return listOfPopularItems;
+    },
+    async getSearchListRequest(context, params) {
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      const result = await axios.post("http://localhost:7000/api/v1", params, {
+        headers: headers,
+      });
       const listOfItems = result.data;
 
-      const allItems = listOfItems.items;
-
-      store.commit("changeSearchList", allItems);
-      return allItems;
+      store.commit("changeSearchList", listOfItems);
+      return listOfItems;
     },
   },
 };
