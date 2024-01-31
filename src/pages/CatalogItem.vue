@@ -107,7 +107,7 @@
                         currentItemAmount *
                         currentItemValue
                       }}
-                      <span class="green-text">xtr</span>
+                      <span class="green-text">xdr</span>
                     </p>
                     <div class="item_amount_value_choice">
                       <select
@@ -116,8 +116,8 @@
                         id=""
                         class="value_amount"
                       >
-                        <option value="kilo">КГ</option>
-                        <option value="gramms">ГРАММ</option>
+                        <option value="КГ">КГ</option>
+                        <option value="ГРАММ">ГРАММ</option>
                       </select>
                     </div>
                     <div class="item_current_amount">
@@ -152,7 +152,19 @@
                     >
                       КУПИТЬ
                     </button>
-                    <DialogMenu v-model:show="dialogVisible" />
+                    <DialogMenu
+                      v-model:show="dialogVisible"
+                      :nameItem="this.currentItem?.name"
+                      :amountItem="
+                        this.currentItemAmount + ' ' + this.currentItemSystem
+                      "
+                      :id="currentItem?.id"
+                      :priceItem="
+                        currentItem?.price *
+                        currentItemAmount *
+                        currentItemValue
+                      "
+                    />
                     <div class="item_bottom_bonus-text_block">
                       <p class="item_bottom_bonus-text">
                         если на вашем аккаунте есть
@@ -173,7 +185,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import DialogMenu from "@/components/DialogMenu.vue";
+import DialogMenu from "../components/DialogMenu.vue";
 import {
   StatisticsSvgButton,
   CopySvgButton,
@@ -187,7 +199,7 @@ export default {
     let currentItemAmount = 1;
     let currentItemSystem = "КГ";
     var currentItemValue = 1;
-    var dialogVisible = false;
+    const dialogVisible = false;
     const types = {
       aLotOfItems: {
         title: "МНОГО В НАЛИЧИИ",
@@ -254,7 +266,7 @@ export default {
   },
   watch: {
     currentItemSystem() {
-      if (this.currentItemSystem == "kilo") {
+      if (this.currentItemSystem == "КГ") {
         this.currentItemValue = 1;
       } else {
         this.currentItemValue = 0.001;
