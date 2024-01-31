@@ -2,15 +2,15 @@
   <div class="container">
     <div class="main-section-block">
       <div class="main-section_upper">
-        <div class="katalog-products-block">
+        <div class="katalog-products-block" @click="catalogPath">
           <div class="first-block-svg">
             <FirstBlockSvg />
           </div>
           <p class="first-block-text block-text">Каталог <br />продукции</p>
         </div>
         <div class="constructor-block">
-          <div class="second-block-svg">
-            <SecondBlockLeftSvg />
+          <div>
+            <SecondBlockLeftSvg class="second-block-svg" />
             <div class="second-block-text block-text">
               Конструктор <br />
               реагентов
@@ -68,7 +68,9 @@ export default {
     SecondSectionBlockLeftSvg,
   },
   methods: {
-    postMethod() {},
+    catalogPath() {
+      this.$router.push("/catalog/search?search=");
+    },
   },
 };
 </script>
@@ -164,6 +166,7 @@ export default {
   flex-direction: column;
 }
 .constructor-block {
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -171,13 +174,34 @@ export default {
   border-radius: 4px;
   background: var(--gray-bg, #f7f7f7);
 }
+.constructor-block :hover {
+  .second-block-svg {
+    transform: translateY(25px) scale(1.2);
+    transition: 0.3s ease;
+  }
+  .second-block-text {
+    transform: translateY(25px) scale(1.2);
+    transition: 0.3s ease;
+  }
+}
 .katalog-products-block {
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 49.7%;
   border-radius: 4px;
   background: var(--gray-bg, #f7f7f7);
+}
+.katalog-products-block:hover {
+  .first-block-svg {
+    transform: translateY(25px) scale(1.2);
+    transition: 0.3s ease;
+  }
+  .first-block-text {
+    transform: translateY(25px) scale(1.2);
+    transition: 0.3s ease;
+  }
 }
 .main-section_upper {
   display: flex;

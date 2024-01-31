@@ -12,8 +12,10 @@
               Заполните форму, отправьте ее нам, мы с Вами свяжемся!
             </h4>
           </div>
-          <div class="dialog__content_buy-bttn">
-            <button type="button" @click="postMethod">Оформить заказ</button>
+          <div class="dialog__content_buy-bttn" id="dialog__content_buy-bttn">
+            <button type="button" id="postForm" class="" @click="postMethod">
+              Оформить заказ
+            </button>
           </div>
         </div>
         <div class="dialog__content_inputs">
@@ -142,6 +144,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "DialogMenu",
   data() {
@@ -174,17 +177,36 @@ export default {
     id: { Type: Number },
   },
   methods: {
+    ...mapActions(["setTransfer"]),
     hideDialog() {
       this.$emit("update:show", false);
     },
     async postMethod() {
-      this.$store.dispatch("setTransfer", {
+      this.setTransfer({
         params: this.params,
         price: this.$props.priceItem,
         name: this.$props.nameItem,
         amount: this.$props.amountItem,
         id: this.$props.id,
-      });
+      })
+        .then((response) => {
+          if (response.data == "OK") {
+            var button = document.getElementById("postForm");
+            var block = document.getElementById("dialog__content_buy-bttn");
+            block.classList.remove("redButton");
+            block.classList.add("greenButton");
+            button.textContent = "Успешно!";
+            return response;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          var button = document.getElementById("postForm");
+          var block = document.getElementById("dialog__content_buy-bttn");
+          block.classList.add("redButton");
+          button.textContent = "Ошибка!";
+          return error;
+        });
     },
   },
 };
@@ -200,9 +222,9 @@ export default {
   align-self: center;
   margin-bottom: 15%;
   padding: 20px 40px;
-  background: rgb(133, 133, 133);
+  background: rgb(180, 180, 180);
   border-radius: 20px;
-  color: #cdcdcd;
+  color: #ffffff;
   font-size: 20px;
 }
 .dialog__content_inputs {
@@ -237,7 +259,7 @@ input {
 .dialog__content-block {
   width: 70%;
   height: 70%;
-  background: #cdcdcd;
+  background: #f8f8f8;
   border-radius: 20px;
   display: flex;
   justify-content: space-between;
@@ -260,5 +282,11 @@ input {
   right: 0%;
   background: rgb(0, 0, 0, 0.5);
   position: fixed;
+}
+.greenButton {
+  background: #00ab00;
+}
+.redButton {
+  background: #cc0c0c;
 }
 </style>

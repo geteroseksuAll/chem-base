@@ -20,6 +20,7 @@ export default {
     },
     changeRequestStatus(state, data) {
       state.requestStatus = data;
+      console.log(data);
     },
   },
   actions: {
@@ -34,19 +35,18 @@ export default {
       const headers = {
         "Content-Type": "application/json",
       };
-      const result = await axios.post(
-        `http://localhost:7000/api/v1/catalog/${id}`,
-        { ...params, price, productName: name, amount },
-        { headers: headers }
-      );
-      console.log(params, price, name, amount);
-
-      if (result.status == 200) {
-        store.commit("changeRequestStatus", true);
-      } else {
-        store.commit("changeRequestStatus", false);
-      }
+      const result = await axios
+        .post(
+          `http://localhost:7000/api/v1/catalog/${id}`,
+          { ...params, price, productName: name, amount },
+          { headers: headers }
+        )
+        .catch((error) => {
+          throw error;
+        });
+      return result;
     },
+
     async getSearchListRequest(context, params) {
       const headers = {
         "Content-Type": "application/json",
