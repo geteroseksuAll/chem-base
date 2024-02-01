@@ -8,6 +8,14 @@
         <div class="header-options">
           <HeaderOptions />
         </div>
+        <router-link
+          class="router_link_to_catalog"
+          :to="{ name: 'catalogSearch', query: { search: '' } }"
+        >
+          <div class="catalog_link_section">
+            <p class="catalog_link_section_text">Каталог</p>
+          </div>
+        </router-link>
       </div>
       <div class="input-section">
         <input
@@ -16,6 +24,12 @@
           name="search"
           v-model="postData.fullName"
           id="message"
+          v-on:keyup.enter="
+            this.$router.push({
+              name: 'catalogSearch',
+              query: { search: postData.fullName },
+            })
+          "
         />
         <router-link
           type="button"
@@ -74,6 +88,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.catalog_link_section {
+  display: none;
+}
 .current-lang_text {
   margin-right: 5px;
   color: var(--Base, #14d8b5);
@@ -132,5 +149,57 @@ input {
   border-radius: 20px;
   border: none;
   outline: none;
+}
+@media screen and (max-width: 1440px) {
+  .header {
+    padding: 0;
+  }
+  .input-section {
+    width: 30%;
+    .input-section_img {
+      margin: 5px 0 0 -40px;
+    }
+  }
+  .header-options {
+    margin-top: 10px;
+  }
+  .header-logo {
+    margin: 0px 10% 0px 10px;
+  }
+  .logo-section {
+    width: 30%;
+    display: flex;
+    align-items: center;
+  }
+  .input-section {
+    justify-content: right;
+    margin: 0 20px 0 0;
+  }
+  .router_link_to_catalog {
+    text-decoration: none;
+    color: inherit;
+  }
+  .catalog_link_section {
+    margin-left: 30px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    padding: 31.5px 40px 31.5px 40px;
+    cursor: pointer;
+    border-right: 1px solid #cdcdcd;
+    border-left: 1px solid #cdcdcd;
+    transition: 0.3s ease;
+    &:hover {
+      border: none;
+      background: #14d8b5;
+    }
+  }
+  .catalog_link_section_text {
+    font-size: 16px;
+    font-weight: 550;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: center;
+  }
 }
 </style>
