@@ -24,14 +24,19 @@
             v-for="item in this.$store.getters.getAllItemsList"
             :key="item.id"
           >
-            <div
-              class="catalog_block_content_intems-list_image"
-              v-html="deleteAllBackSlashes(item.image)"
-            ></div>
-            <p class="catalog_block_content_items-list_name">
-              {{ item.commonName }}
-              {{ console.log(item) }}
-            </p>
+            <router-link
+              class="catalog_block_content_items-list_item"
+              :to="'/catalog/' + item.id"
+            >
+              <div
+                class="catalog_block_content_intems-list_image"
+                v-html="deleteAllBackSlashes(item.image)"
+              ></div>
+              <p class="catalog_block_content_items-list_name">
+                {{ item.commonName }}
+                {{ console.log(item) }}
+              </p>
+            </router-link>
           </div>
         </div>
       </div>
@@ -84,6 +89,8 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 30%;
+  text-decoration: none;
+  color: inherit;
 }
 .catalog_block_content_items-list {
   display: flex;
