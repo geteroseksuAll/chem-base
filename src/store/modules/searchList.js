@@ -5,11 +5,13 @@ export default {
     requestStatus: null,
     searchList: null,
     popularItemsList: [],
+    allItemsList: [],
   },
   getters: {
     getSearchList: ({ searchList }) => searchList,
     getPopularItemsList: ({ popularItemsList }) => popularItemsList,
     getRequestStatus: ({ requestStatus }) => requestStatus,
+    getAllItemsList: ({ getAllItemsList }) => getAllItemsList,
   },
   mutations: {
     changeSearchList(state, data) {
@@ -20,7 +22,9 @@ export default {
     },
     changeRequestStatus(state, data) {
       state.requestStatus = data;
-      console.log(data);
+    },
+    changeAllItemsList(state, data) {
+      state.getAllItemsList = data;
     },
   },
   actions: {
@@ -46,6 +50,13 @@ export default {
         });
       return result;
     },
+    async getAllItemsRequest() {
+      const result = await axios.get("http://localhost:7000/api/v1/catalog");
+      const listOfAllItems = result.data;
+
+      store.commit("changeAllItemsList", listOfAllItems);
+      return listOfAllItems;
+    },
 
     async getSearchListRequest(context, params) {
       const headers = {
@@ -56,8 +67,9 @@ export default {
         headers: headers,
       });
       const listOfItems = result.data;
+      console.log(params);
 
-      store.commit("changeSearchList", listOfItems);
+      store.commit("changeAllItemsList", listOfItems);
       return listOfItems;
     },
   },
