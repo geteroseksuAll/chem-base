@@ -2,10 +2,19 @@
   <div class="catalog_block">
     <div class="catalog_block_content">
       <div class="catalog_block_header">
-        <p class="catalog_block_header_text" v-if="this.$route.query.search">
+        <p
+          class="catalog_block_header_text"
+          id="maintext"
+          v-if="this.$route.query.search"
+        >
           {{ this.$route.query.search }}
         </p>
         <p class="catalog_block_header_text" v-else>Каталог продукции</p>
+        <p class="catalog_block_header_subtext deleted" id="subtext">
+          Не удалось ничего найти по запросу "{{
+            this.$route.query.search
+          }}"<span class="subtext_mini">Попробуйте поискать по-другому</span>
+        </p>
       </div>
       <div class="catalog_block_items">
         <ul class="catalog_block_content_links">
@@ -34,7 +43,6 @@
               ></div>
               <p class="catalog_block_content_items-list_name">
                 {{ item.commonName }}
-                {{ console.log(item) }}
               </p>
             </router-link>
           </div>
@@ -45,6 +53,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "CatalogPage",
   data: () => ({
@@ -54,10 +63,18 @@ export default {
     "$route.query.search"() {
       if (this.firstLoad) return;
       var params = { fullName: this.$route.query.search };
-      this.$store.dispatch("getSearchListRequest", params);
+      this.$store.dispatch("getSearchListRequest", params).catch((error) => {
+        var previous_text = document.getElementById("maintext");
+        previous_text.classList.add("deleted");
+
+        var future_text = document.getElementById("subtext");
+        future_text.classList.remove("deleted");
+        return error;
+      });
     },
   },
   methods: {
+    ...mapActions(["getSearchListRequest"]),
     deleteAllBackSlashes(str) {
       let cleanedStr = str.replace(/\\/g, "");
       var cleanedStrElems = cleanedStr.split(/\s+/);
@@ -74,16 +91,37 @@ export default {
     var params = { fullName: this.$route.query.search };
     if (params.fullName == "") {
       this.$store.dispatch("getAllItemsRequest");
-      this.firstLoad = false;
     } else {
-      this.$store.dispatch("getSearchListRequest", params);
-      this.firstLoad = false;
+      this.getSearchListRequest(params).catch((error) => {
+        var previous_text = document.getElementById("maintext");
+        previous_text.classList.add("deleted");
+
+        var future_text = document.getElementById("subtext");
+        future_text.classList.remove("deleted");
+        return error;
+      });
     }
+    this.firstLoad = false;
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.catalog_block_header_subtext {
+  text-align: left;
+  margin: 50px 0 0 0;
+  color: var(--black-base, #2c2c2c);
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 64px; /* 133.333% */
+  letter-spacing: -0.96px;
+  .subtext_mini {
+    display: block;
+    font-size: 26px;
+    font-weight: 400;
+  }
+}
 .catalog_block_content_items-list_item {
   display: flex;
   flex-direction: column;
@@ -93,17 +131,18 @@ export default {
   color: inherit;
 }
 .catalog_block_content_items-list {
+  width: 80%;
   display: flex;
   flex-wrap: wrap;
 }
 .catalog_block_content_links {
-  margin: 50px 20px 10px 0;
+  margin: 50px 30px 30px 0;
+  align-items: left;
   list-style: none;
   display: flex;
   text-align: left;
-  align-items: center;
   flex-direction: column;
-  width: 550px;
+  width: 300px;
 }
 .catalog_block_items {
   display: flex;
@@ -140,5 +179,8 @@ text {
 .catalog_block {
   display: flex;
   justify-content: center;
+}
+.deleted {
+  display: none;
 }
 </style>

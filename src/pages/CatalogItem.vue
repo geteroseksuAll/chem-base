@@ -11,10 +11,16 @@
         <div class="item-page_information">
           <div class="item-main_info">
             <h1 class="item_title">
-              {{ currentItem?.name }}
+              {{ currentItem?.commonName }}
             </h1>
+            <div></div>
             <div class="item-info_block">
-              <img class="item-info_img" src="/icons/test_image.png" alt="" />
+              <div class="item_image_block" v-if="currentItem">
+                <div
+                  class="item_image"
+                  v-html="deleteAllBackSlashesMain(currentItem.image)"
+                ></div>
+              </div>
               <ul class="item-info_list">
                 <li class="item-info_text">
                   ХАРАКТЕРИСТИКИ <HeaderLangButton />
@@ -37,13 +43,19 @@
                   :key="item.id"
                 >
                   <router-link
-                    v-if="item.id < 5"
+                    style="
+                      text-decoration: none;
+                      color: inherit;
+                      text-align: center;
+                    "
+                    v-if="item && item.id < 5"
                     :to="{ path: '/catalog/' + item.id }"
-                    ><img
-                      class="popular_item_img"
-                      src="/icons/test_image.png"
-                      alt=""
-                  /></router-link>
+                    ><div
+                      class="popular_item_image"
+                      v-html="deleteAllBackSlashesPopular(item.image)"
+                    ></div>
+                    <div class="popular_item_name">{{ item.commonName }}</div>
+                  </router-link>
                 </li>
               </ul>
             </div>
@@ -58,7 +70,7 @@
                   </div>
                 </div>
                 <p class="name_info_description">
-                  {{ currentItem?.casNumber }}
+                  {{ currentItem?.casNumbers }}
                 </p>
                 <div class="name_info_bottom_items">
                   <div class="bottom_item_info_svg">
@@ -154,7 +166,7 @@
                     </button>
                     <DialogMenu
                       v-model:show="dialogVisible"
-                      :nameItem="this.currentItem?.name"
+                      :nameItem="this.currentItem?.commonName"
                       :amountItem="
                         this.currentItemAmount + ' ' + this.currentItemSystem
                       "
@@ -235,10 +247,34 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["getPopularItemsRequest"]),
+    ...mapActions(["getAllItemsRequest", "getPopularItemsRequest"]),
+
+    deleteAllBackSlashesMain(str) {
+      let cleanedStr = str.replace(/\\/g, "");
+      var cleanedStrElems = cleanedStr.split(/\s+/);
+      var width = window.innerWidth;
+      cleanedStrElems[1] = `width="${width / 8}"`;
+      cleanedStrElems[17] = `height="${width / 8}"`;
+
+      cleanedStr = cleanedStrElems.join(" ");
+      return cleanedStr;
+    },
+
+    deleteAllBackSlashesPopular(str) {
+      let cleanedStr = str.replace(/\\/g, "");
+      var cleanedStrElems = cleanedStr.split(/\s+/);
+      var width = window.innerWidth;
+      cleanedStrElems[1] = `width="${width / 10}"`;
+      cleanedStrElems[17] = `height="${width / 10}"`;
+
+      cleanedStr = cleanedStrElems.join(" ");
+      return cleanedStr;
+    },
+
     openForm() {
       this.dialogVisible = true;
     },
+
     plusValue() {
       if (this.currentItemAmount) {
         this.currentItemAmount = parseInt(this.currentItemAmount) + 1;
@@ -246,23 +282,26 @@ export default {
         this.currentItemAmount = 1;
       }
     },
+
     minusValue() {
       if (this.currentItemAmount > 0) {
         this.currentItemAmount = parseInt(this.currentItemAmount) - 1;
       }
     },
   },
+
   computed: {
     currentItem() {
-      const currentItem = this.$store.getters.getPopularItemsList.find(
+      const currentItem = this.$store.getters.getAllItemsList?.find(
         (item) => item.id == this.$route.params.id
       );
-
+      console.log(currentItem);
       return currentItem;
     },
   },
   mounted() {
     this.getPopularItemsRequest();
+    this.getAllItemsRequest();
   },
   watch: {
     currentItemSystem() {
@@ -285,6 +324,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.popular_item_name {
+  font-size: 16px;
+  font-weight: 500;
+}
+
 select {
   display: flex;
   justify-content: space-between;

@@ -63,11 +63,14 @@ export default {
         "Content-Type": "application/json",
       };
 
-      const result = await axios.post("http://localhost:7000/api/v1", params, {
-        headers: headers,
-      });
+      const result = await axios
+        .post("http://localhost:7000/api/v1", params, {
+          headers: headers,
+        })
+        .catch((error) => {
+          throw error;
+        });
       const listOfItems = result.data;
-      console.log(params);
 
       store.commit("changeAllItemsList", listOfItems);
       return listOfItems;
