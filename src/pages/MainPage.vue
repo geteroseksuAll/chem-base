@@ -220,4 +220,25 @@ export default {
   line-height: 28px; /* 127.273% */
   text-transform: uppercase;
 }
+@media screen and (max-width: 1440px) {
+  .second-section_bottom__text {
+    font-size: 48px;
+    line-height: 48px;
+  }
+  .block-text {
+    font-size: 16px;
+  }
+  .bottom-text {
+    font-size: 48px;
+    line-height: 48px;
+  }
+  .second-section_middle__text {
+    width: 200px;
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .second-section_middle__button-text {
+    font-size: 12px;
+  }
+}
 </style>

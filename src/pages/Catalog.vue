@@ -17,16 +17,6 @@
         </p>
       </div>
       <div class="catalog_block_items">
-        <ul class="catalog_block_content_links">
-          <li class="block_content_link">Органические соединения</li>
-          <li class="block_content_link">Органические соединения</li>
-          <li class="block_content_link">Органические соединения</li>
-          <li class="block_content_link">Органические соединения</li>
-          <li class="block_content_link">Органические соединения</li>
-          <li class="block_content_link">Органические соединения</li>
-          <li class="block_content_link">Органические соединения</li>
-          <li class="block_content_link">Органические соединения</li>
-        </ul>
         <div class="catalog_block_content_items-list">
           <div
             class="catalog_block_content_items-list_item"
@@ -72,6 +62,7 @@ export default {
       if (this.firstLoad) return;
 
       var params = { fullName: this.$route.query.search };
+      console.log(params);
       this.$store.dispatch("getSearchListRequest", params).catch((error) => {
         var previous_text = document.getElementById("maintext");
         previous_text.classList.add("deleted");
@@ -88,8 +79,8 @@ export default {
       let cleanedStr = str.replace(/\\/g, "");
       var cleanedStrElems = cleanedStr.split(/\s+/);
       var width = window.innerWidth;
-      cleanedStrElems[1] = `width="${width / 8}"`;
-      cleanedStrElems[17] = `height="${width / 8}"`;
+      cleanedStrElems[1] = `width="${width / 9}"`;
+      cleanedStrElems[17] = `height="${width / 9}"`;
 
       cleanedStr = cleanedStrElems.join(" ");
 
@@ -138,12 +129,12 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 30%;
+  width: 24%;
   text-decoration: none;
   color: inherit;
 }
 .catalog_block_content_items-list {
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
 }

@@ -22,9 +22,36 @@
                 ></div>
               </div>
               <ul class="item-info_list">
-                <li class="item-info_text">
-                  ХАРАКТЕРИСТИКИ <HeaderLangButton />
+                <li
+                  class="item-info_text"
+                  @click="showSpec = !showSpec"
+                  :class="{ active: showSpec }"
+                >
+                  ХАРАКТЕРИСТИКИ
+                  <HeaderLangButton :class="{ activeImg: showSpec }" />
                 </li>
+                <Transition name="slide-fade"
+                  ><div v-if="showSpec" class="item-info_specification">
+                    <div class="spec_list">
+                      <div class="spec_item">
+                        <p class="spec_name">SMILES</p>
+                        <p class="spec_description">
+                          {{ currentItem?.smiles }}
+                        </p>
+                      </div>
+                      <div class="spec_item">
+                        <p class="spec_name">INCHI</p>
+                        <p class="spec_description">{{ currentItem?.inchi }}</p>
+                      </div>
+                      <div class="spec_item">
+                        <p class="spec_name">Молекулярный вес</p>
+                        <p class="spec_description">
+                          {{ currentItem.molecularWeight }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </Transition>
                 <li class="item-info_text">ОПИСАНИЕ <HeaderLangButton /></li>
                 <li class="item-info_text">
                   ДОСТАВКА И ОПЛАТА <HeaderLangButton />
@@ -38,23 +65,23 @@
             <div class="popular_items_block">
               <div class="popular_items_title">ЧАСТО ПОКУПАЮТ</div>
               <ul class="popular_items_list">
-                <li
-                  v-for="item in this.$store.getters.getPopularItemsList"
-                  :key="item.id"
-                >
+                <li v-for="item in this.popularItemsArray" :key="item.id">
                   <router-link
                     style="
                       text-decoration: none;
                       color: inherit;
                       text-align: center;
                     "
-                    v-if="item && item.id < 5"
+                    v-if="item"
                     :to="{ path: '/catalog/' + item.id }"
-                    ><div
+                  >
+                    <div class="popular_item_name">
+                      {{ item.commonName }}
+                    </div>
+                    <div
                       class="popular_item_image"
                       v-html="deleteAllBackSlashesPopular(item.image)"
                     ></div>
-                    <div class="popular_item_name">{{ item.commonName }}</div>
                   </router-link>
                 </li>
               </ul>
@@ -119,7 +146,7 @@
                         currentItemAmount *
                         currentItemValue
                       }}
-                      <span class="green-text">xdr</span>
+                      <span class="green-text">$</span>
                     </p>
                     <div class="item_amount_value_choice">
                       <select
@@ -212,6 +239,8 @@ export default {
     let currentItemSystem = "КГ";
     var currentItemValue = 1;
     const dialogVisible = false;
+    const showSpec = false;
+
     const types = {
       aLotOfItems: {
         title: "МНОГО В НАЛИЧИИ",
@@ -244,6 +273,7 @@ export default {
       currentItemSystem,
       currentItemValue,
       dialogVisible,
+      showSpec,
     };
   },
   methods: {
@@ -295,8 +325,13 @@ export default {
       const currentItem = this.$store.getters.getAllItemsList?.find(
         (item) => item.id == this.$route.params.id
       );
-
+      console.log(currentItem);
       return currentItem;
+    },
+    popularItemsArray() {
+      const popularItemsArray = this.$store.getters?.getPopularItemsList;
+
+      return popularItemsArray?.slice(0, 4);
     },
   },
   mounted() {
@@ -324,6 +359,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.spec_name {
+  color: #808080;
+}
+.item-info_specification {
+  font-size: 16px;
+}
+.spec_item {
+  border-bottom: 1px solid #14d8b5;
+}
+.spec_description {
+  max-width: 300px;
+}
+
 .popular_item_name {
   font-size: 16px;
   font-weight: 500;
@@ -529,7 +577,21 @@ ul {
   width: 90%;
   margin-bottom: 134px;
 }
+
+.slide-fade-enter-active {
+  transition: all 0.5s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+}
 .item-info_text {
+  cursor: pointer;
   display: flex;
   color: var(--gray-heavy, #808080);
   font-size: 16px;
@@ -587,5 +649,14 @@ ul {
 }
 .pages_link:not(:last-child) {
   margin-right: 8px;
+}
+.active {
+  color: #14d8b5;
+  border-bottom: 1px solid var(--gray-UI, #14d8b5);
+  transition: 0.3s;
+}
+.activeImg {
+  transform: rotateX(180deg);
+  transition: 0.5s;
 }
 </style>
