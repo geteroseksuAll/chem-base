@@ -70,7 +70,7 @@
                   </div>
                 </div>
                 <p class="name_info_description">
-                  {{ currentItem?.casNumbers }}
+                  {{ currentItem?.casNumbers.join(" ") }}
                 </p>
                 <div class="name_info_bottom_items">
                   <div class="bottom_item_info_svg">
@@ -295,7 +295,7 @@ export default {
       const currentItem = this.$store.getters.getAllItemsList?.find(
         (item) => item.id == this.$route.params.id
       );
-      console.log(currentItem);
+
       return currentItem;
     },
   },

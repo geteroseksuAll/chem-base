@@ -61,7 +61,16 @@ export default {
   }),
   watch: {
     "$route.query.search"() {
+      this.$store.state.searchList = [];
+      4;
+
+      var previousText = document.getElementById("maintext");
+      var futureText = document.getElementById("subtext");
+      previousText?.classList.remove("deleted");
+      futureText?.classList.add("deleted");
+
       if (this.firstLoad) return;
+
       var params = { fullName: this.$route.query.search };
       this.$store.dispatch("getSearchListRequest", params).catch((error) => {
         var previous_text = document.getElementById("maintext");
@@ -89,15 +98,18 @@ export default {
   },
   mounted() {
     var params = { fullName: this.$route.query.search };
+    var previousText = document.getElementById("maintext");
+    var futureText = document.getElementById("subtext");
+    previousText?.classList.remove("deleted");
+    futureText?.classList.add("deleted");
+
     if (params.fullName == "") {
       this.$store.dispatch("getAllItemsRequest");
     } else {
       this.getSearchListRequest(params).catch((error) => {
-        var previous_text = document.getElementById("maintext");
-        previous_text.classList.add("deleted");
+        previousText.classList.add("deleted");
 
-        var future_text = document.getElementById("subtext");
-        future_text.classList.remove("deleted");
+        futureText.classList.remove("deleted");
         return error;
       });
     }
@@ -136,7 +148,7 @@ export default {
   flex-wrap: wrap;
 }
 .catalog_block_content_links {
-  margin: 50px 30px 30px 0;
+  margin: 20px 30px 30px 0;
   align-items: left;
   list-style: none;
   display: flex;
@@ -165,7 +177,7 @@ text {
   text-align: left;
 }
 .catalog_block_header_text {
-  margin: 50px 0;
+  margin: 20px 0;
   color: var(--black-base, #2c2c2c);
   font-size: 48px;
   font-style: normal;
