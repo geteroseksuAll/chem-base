@@ -46,7 +46,7 @@
                       <div class="spec_item">
                         <p class="spec_name">Молекулярный вес</p>
                         <p class="spec_description">
-                          {{ currentItem.molecularWeight }}
+                          {{ currentItem?.molecularWeight }}
                         </p>
                       </div>
                     </div>
@@ -583,7 +583,7 @@ ul {
 }
 
 .slide-fade-leave-active {
-  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .slide-fade-enter-from,

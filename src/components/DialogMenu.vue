@@ -200,7 +200,6 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
           var button = document.getElementById("postForm");
           var block = document.getElementById("dialog__content_buy-bttn");
           block.classList.add("redButton");

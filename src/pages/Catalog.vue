@@ -61,8 +61,9 @@ export default {
 
       if (this.firstLoad) return;
 
-      var params = { fullName: this.$route.query.search };
+      var params = { fullName: this.$route.query.search.replaceAll(" ", "") };
       console.log(params);
+
       this.$store.dispatch("getSearchListRequest", params).catch((error) => {
         var previous_text = document.getElementById("maintext");
         previous_text.classList.add("deleted");
@@ -88,7 +89,8 @@ export default {
     },
   },
   mounted() {
-    var params = { fullName: this.$route.query.search };
+    var params = { fullName: this.$route.query.search.replaceAll(" ", "") };
+    console.log(params);
     var previousText = document.getElementById("maintext");
     var futureText = document.getElementById("subtext");
     previousText?.classList.remove("deleted");
