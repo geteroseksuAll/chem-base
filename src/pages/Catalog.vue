@@ -29,9 +29,13 @@
               :to="'/catalog/' + item.id"
             >
               <div
+                v-if="item.image"
                 class="catalog_block_content_intems-list_image"
                 v-html="deleteAllBackSlashes(item.image)"
               ></div>
+              <div v-else class="catalog_block_content_intems-list_image">
+                Фото нет)
+              </div>
               <p class="catalog_block_content_items-list_name">
                 {{ item.commonName }}
               </p>
@@ -184,5 +188,12 @@ text {
 }
 .deleted {
   display: none;
+}
+.catalog_block_content_intems-list_image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 11vw;
+  height: 11vw;
 }
 </style>

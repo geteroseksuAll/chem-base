@@ -4,7 +4,7 @@
     v-if="show"
     @click.stop="hideDialog"
     @keyup.enter="this.hideDialog"
-    @submit.prevent="login"
+    @submit.prevent="register"
   >
     <div class="registration_content_block">
       <div class="registration_content" @click.stop>
@@ -13,7 +13,9 @@
           placeholder="Введите email"
           name="email"
           class="input_registration"
-          v-model="email"
+          v-model="emailReg"
+          required
+          autofocus
         />
         <input
           type="password"
@@ -21,11 +23,48 @@
           id=""
           placeholder="Введите пароль"
           class="input_registration"
-          v-model="password"
+          v-model="passwordReg"
+          required
         />
-        <button type="submit" class="registration-button" @click="login">
-          Войти
+        <input
+          type="password"
+          name="password"
+          id=""
+          placeholder="Подтвердите пароль"
+          class="input_registration"
+          v-model="passwordConfirmationReg"
+          required
+        />
+        <button type="submit" class="registration-button" @click="onRegister">
+          Зарегистрироваться
         </button>
+      </div>
+    </div>
+    <div class="registration_1" @submit.prevent="login">
+      <div class="registration_content_block">
+        <div class="registration_content" @click.stop>
+          <input
+            type="email"
+            placeholder="Введите email"
+            name="email"
+            class="input_registration"
+            v-model="emailLog"
+            required
+            autofocus
+          />
+          <input
+            type="password"
+            name="password"
+            id=""
+            placeholder="Введите пароль"
+            class="input_registration"
+            v-model="passwordLog"
+            required
+          />
+          <button type="submit" class="registration-button" @click="login">
+            Войти
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -37,8 +76,11 @@ export default {
   name: "RegistrationMenu",
   data() {
     return {
-      email: "",
-      password: "",
+      emailReg: "",
+      passwordReg: "",
+      passwordConfirmationReg: "",
+      emailLog: "",
+      passwordLog: "",
     };
   },
   props: {
@@ -48,14 +90,25 @@ export default {
     },
   },
   methods: {
-    ...mapActions([""]),
+    ...mapActions(["register"]),
     hideDialog() {
       this.$emit("update:show", false);
     },
+    async onRegister() {
+      let emailReg = this.emailReg;
+      let passwordReg = this.passwordReg;
+      const result = await this.register({
+        emailReg,
+        passwordReg,
+      });
+      console.log(result);
+    },
     login() {
-      let email = this.email;
-      let password = this.password;
-      return email, password;
+      let emailLog = this.emailLog;
+      let passwordLog = this.passwordLog;
+      this.login({ emailLog, passwordLog })
+        .then(() => this.$router.push("/"))
+        .catch((err) => console.log(err));
     },
   },
 };

@@ -37,7 +37,16 @@
             class="second-section-middle-button green-bttn"
             id="search"
           >
-            <p class="second-section_middle__button-text">Зарегистрироваться</p>
+            <p v-if="!isLoggedIn" class="second-section_middle__button-text">
+              Зарегистрироваться
+            </p>
+            <p
+              v-else
+              class="second-section_middle__button-text"
+              @click="onLogout"
+            >
+              Разлогиниться
+            </p>
           </button>
         </div>
         <div class="second-section_bottom">
@@ -53,6 +62,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import {
   FirstBlockSvg,
   SecondBlockLeftSvg,
@@ -68,8 +78,17 @@ export default {
     SecondSectionBlockLeftSvg,
   },
   methods: {
+    ...mapActions(["logout"]),
     catalogPath() {
       this.$router.push("/catalog/search?search=");
+    },
+    onLogout() {
+      this.logout().then(() => this.$router.push("/"));
+    },
+  },
+  computed: {
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
     },
   },
 };

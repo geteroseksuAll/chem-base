@@ -89,6 +89,11 @@ export default {
     openRegistration() {
       this.dialogVisible = true;
     },
+    logout: function () {
+      this.$store.dispatch("logout").then(() => {
+        this.$router.push("/login");
+      });
+    },
   },
 };
 </script>
