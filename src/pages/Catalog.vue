@@ -17,6 +17,7 @@
         </p>
       </div>
       <div class="catalog_block_items">
+        <div class="catalog_block_current_item"></div>
         <div class="catalog_block_content_items-list">
           <div
             class="catalog_block_content_items-list_item"
@@ -52,8 +53,6 @@ export default {
   watch: {
     "$route.query.search"() {
       this.$store.state.searchList = [];
-      4;
-
       var previousText = document.getElementById("maintext");
       var futureText = document.getElementById("subtext");
       previousText?.classList.remove("deleted");
@@ -62,7 +61,6 @@ export default {
       if (this.firstLoad) return;
 
       var params = { fullName: this.$route.query.search.replaceAll(" ", "") };
-      console.log(params);
 
       this.$store.dispatch("getSearchListRequest", params).catch((error) => {
         var previous_text = document.getElementById("maintext");
@@ -90,7 +88,6 @@ export default {
   },
   mounted() {
     var params = { fullName: this.$route.query.search.replaceAll(" ", "") };
-    console.log(params);
     var previousText = document.getElementById("maintext");
     var futureText = document.getElementById("subtext");
     previousText?.classList.remove("deleted");

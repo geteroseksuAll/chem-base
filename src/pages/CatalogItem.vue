@@ -75,13 +75,13 @@
                     v-if="item"
                     :to="{ path: '/catalog/' + item.id }"
                   >
-                    <div class="popular_item_name">
-                      {{ item.commonName }}
-                    </div>
                     <div
                       class="popular_item_image"
                       v-html="deleteAllBackSlashesPopular(item.image)"
                     ></div>
+                    <div class="popular_item_name">
+                      {{ item.commonName }}
+                    </div>
                   </router-link>
                 </li>
               </ul>

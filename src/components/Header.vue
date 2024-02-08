@@ -24,7 +24,7 @@
           name="search"
           v-model="postData.fullName"
           id="message"
-          v-on:keyup.enter="
+          @keyup.enter="
             this.$router.push({
               name: 'catalogSearch',
               query: { search: postData.fullName },
@@ -49,15 +49,17 @@
         </div>
       </div>
       <div class="header-icons-section">
-        <HeaderLoginIcon />
+        <HeaderLoginIcon @click="openRegistration" style="cursor: pointer" />
         <HeaderHeartIcon />
         <HeaderBasketIcon />
       </div>
+      <RegistrationMenu v-model:show="dialogVisible" />
     </div>
   </div>
 </template>
 
 <script>
+import RegistrationMenu from "./RegistrationMenu.vue";
 import {
   HeaderLogo,
   HeaderOptions,
@@ -68,7 +70,7 @@ import {
 } from "./UI";
 export default {
   data() {
-    return { postData: { fullName: "" } };
+    return { postData: { fullName: "" }, dialogVisible: false };
   },
   name: "HeaderSection",
   components: {
@@ -78,10 +80,14 @@ export default {
     HeaderLoginIcon,
     HeaderBasketIcon,
     HeaderHeartIcon,
+    RegistrationMenu,
   },
   methods: {
     pushMainPage() {
       this.$router.push("/");
+    },
+    openRegistration() {
+      this.dialogVisible = true;
     },
   },
 };
