@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "..";
+import authService from "./auth.service";
 export default {
   state: {
     requestStatus: null,
@@ -51,7 +52,10 @@ export default {
       return result;
     },
     async getAllItemsRequest() {
-      const result = await axios.get("http://localhost:7000/api/v1/catalog");
+      const result = await axios.get("http://localhost:7000/api/v1/catalog", {
+        headers: { Authorization: authService.state.token },
+      });
+      console.log(store.state.token);
       const listOfAllItems = result.data;
 
       store.commit("changeAllItemsList", listOfAllItems);

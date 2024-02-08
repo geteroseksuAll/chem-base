@@ -4,7 +4,6 @@
     v-if="show"
     @click.stop="hideDialog"
     @keyup.enter="this.hideDialog"
-    @submit.prevent="register"
   >
     <div class="registration_content_block">
       <div class="registration_content" @click.stop>
@@ -20,7 +19,6 @@
         <input
           type="password"
           name="password"
-          id=""
           placeholder="Введите пароль"
           class="input_registration"
           v-model="passwordReg"
@@ -29,7 +27,6 @@
         <input
           type="password"
           name="password"
-          id=""
           placeholder="Подтвердите пароль"
           class="input_registration"
           v-model="passwordConfirmationReg"

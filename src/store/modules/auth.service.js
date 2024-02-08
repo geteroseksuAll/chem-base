@@ -37,7 +37,6 @@ export default {
             const token = response.data.token;
             const user = response.data.user;
             localStorage.setItem("token", token);
-            axios.defaults.headers.common["Authorization"] = token;
             commit("auth_success", token, user);
             resolve(response);
           })
@@ -51,16 +50,16 @@ export default {
     async register({ commit }, user) {
       try {
         commit("auth_request");
-        const response = await axios({
-          url: "http://localhost7000/api/v1/auth/registration",
-          data: user,
-          method: "POST",
-        });
+        const response = { data: { user: user, token: "123456" } };
+        // await axios({
+        //   url: "http://localhost7000/api/v1/auth/registration",
+        //   data: user,
+        //   method: "POST",
+        // });
         const token = response.data.token;
         const userData = response.data.user;
         localStorage.setItem("token", token);
 
-        axios.defaults.headers.common["Authorization"] = token;
         console.log({ token, userData });
 
         commit("auth_success", token, userData);
