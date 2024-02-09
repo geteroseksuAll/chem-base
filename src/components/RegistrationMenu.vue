@@ -58,7 +58,7 @@
             v-model="passwordLog"
             required
           />
-          <button type="submit" class="registration-button" @click="login">
+          <button type="submit" class="registration-button" @click="onLogin">
             Войти
           </button>
         </div>
@@ -87,23 +87,23 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["register"]),
+    ...mapActions(["register", "login"]),
     hideDialog() {
       this.$emit("update:show", false);
     },
     async onRegister() {
-      let emailReg = this.emailReg;
-      let passwordReg = this.passwordReg;
+      let email = this.emailReg;
+      let password = this.passwordReg;
       const result = await this.register({
-        emailReg,
-        passwordReg,
+        email,
+        password,
       });
       console.log(result);
     },
-    login() {
-      let emailLog = this.emailLog;
-      let passwordLog = this.passwordLog;
-      this.login({ emailLog, passwordLog })
+    onLogin() {
+      let email = this.emailLog;
+      let password = this.passwordLog;
+      this.login({ email, password })
         .then(() => this.$router.push("/"))
         .catch((err) => console.log(err));
     },

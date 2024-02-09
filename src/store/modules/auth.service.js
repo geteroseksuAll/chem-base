@@ -24,46 +24,42 @@ export default {
     },
   },
   actions: {
-    login({ commit }, user) {
-      return new Promise((resolve, reject) => {
-        commit("auth_request");
-        axios({
-          url: "http://localhost7000/api/v1/auth/login",
-          data: user,
-          method: "POST",
-        })
-          .then((response) => {
-            console.log(token, user);
-            const token = response.data.token;
-            const user = response.data.user;
-            localStorage.setItem("token", token);
-            commit("auth_success", token, user);
-            resolve(response);
-          })
-          .catch((error) => {
-            commit("auth_error");
-            localStorage.removeItem("token");
-            reject(error);
-          });
-      });
-    },
-    async register({ commit }, user) {
+    async login({ commit }, params) {
       try {
         commit("auth_request");
-        const response = { data: { user: user, token: "123456" } };
-        // await axios({
-        //   url: "http://localhost7000/api/v1/auth/registration",
-        //   data: user,
-        //   method: "POST",
-        // });
+        console.log(params);
+        const response = await axios.post(
+          "http://localhost:7000/api/v1/auth/login",
+          params
+        );
+        console.log("сработало");
         const token = response.data.token;
         const userData = response.data.user;
         localStorage.setItem("token", token);
 
-        console.log({ token, userData });
+        commit("auth_success", token, userData);
+      } catch (error) {
+        commit("auth_error", error);
+        console.log(error);
+        localStorage.removeItem("token");
+      }
+    },
+    async register({ commit }, params) {
+      try {
+        commit("auth_request");
+        console.log(params);
+        const response = await axios.post(
+          "http://localhost:7000/api/v1/auth/registration",
+          params
+        );
+        console.log("сработало");
+        const token = response.data.token;
+        const userData = response.data.user;
+        localStorage.setItem("token", token);
 
         commit("auth_success", token, userData);
       } catch (error) {
+        console.log(error);
         commit("auth_error", error);
         localStorage.removeItem("token");
       }

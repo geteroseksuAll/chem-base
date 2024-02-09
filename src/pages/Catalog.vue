@@ -91,7 +91,7 @@ export default {
     },
   },
   mounted() {
-    var params = { fullName: this.$route.query.search.replaceAll(" ", "") };
+    var params = { fullName: this.$route.query.search };
     var previousText = document.getElementById("maintext");
     var futureText = document.getElementById("subtext");
     previousText?.classList.remove("deleted");

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import MainPage from "@/pages/MainPage.vue";
 import CatalogItem from "@/pages/CatalogItem.vue";
 import CatalogPage from "@/pages/Catalog.vue";
+import SecureBlock from "@/pages/Secure.vue";
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: "/catalog/:id",
     name: "catalogItem",
     component: CatalogItem,
+  },
+  {
+    path: "/user",
+    name: "SecureBlock",
+    component: SecureBlock,
   },
 ];
 

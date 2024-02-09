@@ -325,7 +325,6 @@ export default {
       const currentItem = this.$store.getters.getAllItemsList?.find(
         (item) => item.id == this.$route.params.id
       );
-      console.log(currentItem);
       return currentItem;
     },
     popularItemsArray() {
