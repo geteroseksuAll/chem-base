@@ -4,7 +4,7 @@ import store from "..";
 export default {
   state: {
     requestStatus: null,
-    searchList: null,
+    searchList: [],
     popularItemsList: [],
     allItemsList: [],
   },
@@ -74,7 +74,7 @@ export default {
         });
       const listOfItems = result.data;
 
-      store.commit("changeAllItemsList", listOfItems);
+      store.commit("changeSearchList", listOfItems);
       return listOfItems;
     },
   },

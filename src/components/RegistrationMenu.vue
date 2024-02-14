@@ -5,7 +5,11 @@
     @click.stop="hideDialog"
     @keyup.enter="this.hideDialog"
   >
-    <div class="registration_content_block">
+    <form
+      class="registration_content_block"
+      @submit.prevent="onRegister"
+      v-if="!swapLogin"
+    >
       <div class="registration_content" @click.stop>
         <input
           type="email"
@@ -30,14 +34,25 @@
           placeholder="Подтвердите пароль"
           class="input_registration"
           v-model="passwordConfirmationReg"
+          @blur="passwordConfirmation"
           required
         />
-        <button type="submit" class="registration-button" @click="onRegister">
+        <button
+          type="submit"
+          class="registration-button"
+          @click="validateEmailReg"
+        >
           Зарегистрироваться
         </button>
+        <p class="registration_content_text">
+          Зарегистрированы?
+          <span class="blue-text" @click="swapLogin = !swapLogin"
+            >Войти в аккаунт</span
+          >
+        </p>
       </div>
-    </div>
-    <div class="registration_1" @submit.prevent="login">
+    </form>
+    <form class="registration_1" v-if="swapLogin" @submit.prevent="onLogin">
       <div class="registration_content_block">
         <div class="registration_content" @click.stop>
           <input
@@ -47,7 +62,6 @@
             class="input_registration"
             v-model="emailLog"
             required
-            autofocus
           />
           <input
             type="password"
@@ -58,12 +72,22 @@
             v-model="passwordLog"
             required
           />
-          <button type="submit" class="registration-button" @click="onLogin">
+          <button
+            type="submit"
+            class="registration-button"
+            @click="validateEmailLog"
+          >
             Войти
           </button>
+          <p class="registration_content_text">
+            Не зарегистрированы?
+            <span class="blue-text" @click="swapLogin = !swapLogin"
+              >Зарегистрироваться</span
+            >
+          </p>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -73,11 +97,13 @@ export default {
   name: "RegistrationMenu",
   data() {
     return {
+      swapLogin: false,
       emailReg: "",
       passwordReg: "",
       passwordConfirmationReg: "",
       emailLog: "",
       passwordLog: "",
+      letRegister: false,
     };
   },
   props: {
@@ -91,20 +117,36 @@ export default {
     hideDialog() {
       this.$emit("update:show", false);
     },
+    validateEmailReg() {
+      if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
+        this.onRegister;
+      }
+    },
+    validateEmailLog() {
+      if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
+        this.onLogin;
+      }
+    },
+    passwordConfirmation() {
+      if (this.passwordReg == this.passwordConfirmationReg) {
+        this.letRegister = true;
+      } else {
+        this.letRegister = false;
+      }
+    },
     async onRegister() {
       let email = this.emailReg;
       let password = this.passwordReg;
-      const result = await this.register({
+      this.register({
         email,
         password,
-      });
-      console.log(result);
+      }).then(() => location.reload());
     },
     onLogin() {
       let email = this.emailLog;
       let password = this.passwordLog;
       this.login({ email, password })
-        .then(() => this.$router.push("/"))
+        .then(() => location.reload())
         .catch((err) => console.log(err));
     },
   },
@@ -112,12 +154,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+input {
+  border: 1px solid #5d5d5d;
+  padding: 20px 64px 20px 16px;
+  border-radius: 36px;
+  outline: none;
+}
+::placeholder {
+  color: #5d5d5d;
+}
+.registration_content_block {
+  background-color: #fff;
+  border-radius: 30px;
+}
+.registration_content_text {
+  text-align: center;
+  margin: 50px 0 0 0;
+  color: #808080;
+}
+
+.blue-text {
+  cursor: pointer;
+  color: #216ee3;
+}
 .registration-button {
-  width: 500px;
-  height: 50px;
-  border-radius: 10px;
-  align-self: center;
-  background: #fff;
+  padding: 20px 50px;
+  border-radius: 64px;
+  background: #14d8b5;
+  font-family: Helvetica;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0.02em;
+  color: #f7f7f7;
 }
 .input_registration {
   margin-bottom: 30px;
@@ -127,6 +196,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 400px;
+  padding: 50px;
 }
 .registration {
   display: flex;

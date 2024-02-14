@@ -42,16 +42,24 @@
           />
         </router-link>
       </div>
-      <div class="header-lang-section">
+      <!-- <div class="header-lang-section">
         <p class="current-lang_text">RU</p>
         <div class="current-lang_button">
           <HeaderLangButton />
         </div>
-      </div>
+      </div> -->
       <div class="header-icons-section">
-        <HeaderLoginIcon @click="openRegistration" style="cursor: pointer" />
+        <HeaderLoginIcon
+          v-if="!isLoggedIn"
+          @click="openRegistration"
+          style="cursor: pointer"
+        />
+        <HeaderMyProfileIcon v-else style="cursor: pointer" />
         <HeaderHeartIcon />
-        <HeaderBasketIcon />
+        <HeaderBasketIcon
+          style="cursor: pointer"
+          @click="this.$router.push('/basket')"
+        />
       </div>
       <RegistrationMenu v-model:show="dialogVisible" />
     </div>
@@ -63,10 +71,11 @@ import RegistrationMenu from "./RegistrationMenu.vue";
 import {
   HeaderLogo,
   HeaderOptions,
-  HeaderLangButton,
+  // HeaderLangButton,
   HeaderLoginIcon,
   HeaderBasketIcon,
   HeaderHeartIcon,
+  HeaderMyProfileIcon,
 } from "./UI";
 export default {
   data() {
@@ -76,11 +85,12 @@ export default {
   components: {
     HeaderLogo,
     HeaderOptions,
-    HeaderLangButton,
+    // HeaderLangButton,
     HeaderLoginIcon,
     HeaderBasketIcon,
     HeaderHeartIcon,
     RegistrationMenu,
+    HeaderMyProfileIcon,
   },
   methods: {
     pushMainPage() {
@@ -93,6 +103,11 @@ export default {
       this.$store.dispatch("logout").then(() => {
         this.$router.push("/login");
       });
+    },
+  },
+  computed: {
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
     },
   },
 };

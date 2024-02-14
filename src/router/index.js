@@ -3,6 +3,7 @@ import MainPage from "@/pages/MainPage.vue";
 import CatalogItem from "@/pages/CatalogItem.vue";
 import CatalogPage from "@/pages/Catalog.vue";
 import SecureBlock from "@/pages/Secure.vue";
+import BasketPage from "@/pages/Basket.vue";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/user",
     name: "SecureBlock",
     component: SecureBlock,
+  },
+  {
+    path: "/basket",
+    name: "basket",
+    component: BasketPage,
   },
 ];
 

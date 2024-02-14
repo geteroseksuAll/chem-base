@@ -7,7 +7,7 @@
           id="maintext"
           v-if="this.$route.query.search"
         >
-          {{ this.$route.query.search }}
+          {{ this.$route.query.search }} :
         </p>
         <p class="catalog_block_header_text" v-else>Каталог продукции</p>
         <p class="catalog_block_header_subtext deleted" id="subtext">
@@ -16,11 +16,43 @@
           }}"<span class="subtext_mini">Попробуйте поискать по-другому</span>
         </p>
       </div>
-      <div class="catalog_block_items">
-        <div class="catalog_block_current_item"></div>
-        <div class="catalog_block_content_items-list">
+      <div class="catalog_block_items" id="blockItems">
+        <div
+          class="catalog_block_current_item"
+          v-if="this.$route.query?.search"
+        >
           <div
             class="catalog_block_content_items-list_item"
+            v-for="item in this.$store.getters.getSearchList"
+            :key="item.id"
+          >
+            <router-link
+              class="catalog_block_content_items-list_item"
+              :to="'/catalog/' + item.id"
+            >
+              <div
+                v-if="item.image"
+                class="catalog_block_content_intems-list_image"
+                v-html="deleteAllBackSlashesMain(item.image)"
+              ></div>
+              <div v-else class="catalog_block_content_intems-list_image">
+                Фото нет)
+              </div>
+              <p class="catalog_block_content_items-list_name">
+                {{ item.commonName }}
+              </p>
+            </router-link>
+          </div>
+        </div>
+        <div
+          class="catalog_block_items_header_text"
+          v-if="this.$route.query.search"
+        >
+          Популярно на сайте
+        </div>
+        <div class="catalog_block_content_items-list">
+          <div
+            class="catalog_block_content_items-list_sub-item"
             v-for="item in this.$store.getters.getAllItemsList"
             :key="item.id"
           >
@@ -31,7 +63,7 @@
               <div
                 v-if="item.image"
                 class="catalog_block_content_intems-list_image"
-                v-html="deleteAllBackSlashes(item.image)"
+                v-html="deleteAllBackSlashesSub(item.image)"
               ></div>
               <div v-else class="catalog_block_content_intems-list_image">
                 Фото нет)
@@ -64,7 +96,9 @@ export default {
 
       if (this.firstLoad) return;
 
-      var params = { fullName: this.$route.query.search.replaceAll(" ", "") };
+      var params = { fullName: this.$route.query.search };
+
+      this.$store.dispatch("getAllItemsRequest");
 
       this.$store.dispatch("getSearchListRequest", params).catch((error) => {
         var previous_text = document.getElementById("maintext");
@@ -77,13 +111,24 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getSearchListRequest"]),
-    deleteAllBackSlashes(str) {
+    ...mapActions(["getSearchListRequest", "getAllItemsListRequest"]),
+    deleteAllBackSlashesMain(str) {
       let cleanedStr = str.replace(/\\/g, "");
       var cleanedStrElems = cleanedStr.split(/\s+/);
       var width = window.innerWidth;
       cleanedStrElems[1] = `width="${width / 9}"`;
       cleanedStrElems[17] = `height="${width / 9}"`;
+
+      cleanedStr = cleanedStrElems.join(" ");
+
+      return cleanedStr;
+    },
+    deleteAllBackSlashesSub(str) {
+      let cleanedStr = str.replace(/\\/g, "");
+      var cleanedStrElems = cleanedStr.split(/\s+/);
+      var width = window.innerWidth;
+      cleanedStrElems[1] = `width="${width / 12}"`;
+      cleanedStrElems[17] = `height="${width / 12}"`;
 
       cleanedStr = cleanedStrElems.join(" ");
 
@@ -96,6 +141,7 @@ export default {
     var futureText = document.getElementById("subtext");
     previousText?.classList.remove("deleted");
     futureText?.classList.add("deleted");
+    this.$store.dispatch("getAllItemsRequest");
 
     if (params.fullName == "") {
       this.$store.dispatch("getAllItemsRequest");
@@ -113,6 +159,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.catalog_block_items_header_text {
+  margin: 40px 0 20px 0;
+  font-size: 30px;
+  color: var(--black-base, #2c2c2c);
+  font-style: normal;
+  font-weight: 700;
+  line-height: 64px;
+  letter-spacing: -0.96px;
+}
 .catalog_block_header_subtext {
   text-align: left;
   margin: 50px 0 0 0;
@@ -136,6 +191,14 @@ export default {
   text-decoration: none;
   color: inherit;
 }
+.catalog_block_content_items-list_sub-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 18%;
+  text-decoration: none;
+  color: inherit;
+}
 .catalog_block_content_items-list {
   width: 100%;
   display: flex;
@@ -152,7 +215,7 @@ export default {
 }
 .catalog_block_items {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
 }
 .block_content_link {
   padding: 20px 20px 20px 40px;

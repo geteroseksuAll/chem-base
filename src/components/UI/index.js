@@ -13,6 +13,7 @@ import CatalogItemPropertiesSvg from "./icons/CatalogItemPropertiesSvg.vue";
 import CopySvgButton from "./icons/CopySvgButton.vue";
 import StatisticsSvgButton from "./icons/StatisticsSvgButton.vue";
 import HeartIcon from "./icons/HeartIcon.vue";
+import HeaderMyProfileIcon from "./icons/HeaderMyProfile.vue";
 
 export {
   HeaderLogo,
@@ -30,4 +31,5 @@ export {
   CopySvgButton,
   StatisticsSvgButton,
   HeartIcon,
+  HeaderMyProfileIcon,
 };

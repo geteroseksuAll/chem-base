@@ -37,7 +37,11 @@
             class="second-section-middle-button green-bttn"
             id="search"
           >
-            <p v-if="!isLoggedIn" class="second-section_middle__button-text">
+            <p
+              v-if="!isLoggedIn"
+              class="second-section_middle__button-text"
+              @click="openRegistration"
+            >
               Зарегистрироваться
             </p>
             <p
@@ -45,9 +49,10 @@
               class="second-section_middle__button-text"
               @click="onLogout"
             >
-              Разлогиниться
+              Выйти из аккаунта
             </p>
           </button>
+          <RegistrationMenu v-model:show="dialogVisible" />
         </div>
         <div class="second-section_bottom">
           <p class="second-section_bottom__text">
@@ -62,6 +67,7 @@
 </template>
 
 <script>
+import RegistrationMenu from "@/components/RegistrationMenu.vue";
 import { mapActions } from "vuex";
 import {
   FirstBlockSvg,
@@ -71,11 +77,15 @@ import {
 } from "@/components/UI";
 export default {
   name: "HeaderSection",
+  data() {
+    return { dialogVisible: false };
+  },
   components: {
     FirstBlockSvg,
     SecondBlockLeftSvg,
     SecondSectionBlockRightSvg,
     SecondSectionBlockLeftSvg,
+    RegistrationMenu,
   },
   methods: {
     ...mapActions(["logout"]),
@@ -84,6 +94,9 @@ export default {
     },
     onLogout() {
       this.logout().then(() => this.$router.push("/"));
+    },
+    openRegistration() {
+      this.dialogVisible = true;
     },
   },
   computed: {
@@ -95,6 +108,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.second-section-middle-button {
+  z-index: 10;
+}
 .green-bttn {
   display: flex;
   padding: 18px 45px;
