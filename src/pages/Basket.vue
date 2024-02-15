@@ -3,7 +3,9 @@
     <div class="basket_block_content">
       <div class="basket_pointers">
         <button type="button" class="basket_pointer">главная</button
-        ><button type="button" class="basket_pointer">корзина</button>
+        ><button type="button" class="basket_pointer green_bttn">
+          корзина
+        </button>
       </div>
       <div class="basket_items_header">Оформление заказа</div>
       <div class="basket_items_list">
@@ -13,19 +15,85 @@
             v-for="item in this.$store.getters?.getAllItemsList"
             :key="item.id"
           >
-            <div class="basket_img" v-html="item.image"></div>
-            <div class="basket_item_info">
-              <div class="item_text_info">
-                <p class="item_articule">
-                  <span class="item_articule_text">артикул:</span>{{ item.id }}
-                </p>
-                <p class="item_name">{{ item.name }}</p>
+            <div
+              class="basket_img"
+              v-if="item?.image"
+              v-html="item?.image"
+            ></div>
+            <div class="basket_item_info" v-if="item?.image">
+              <div class="item_info_content">
+                <div class="item_text_info">
+                  <p class="item_articule">
+                    <span class="item_articule_text">артикул : </span
+                    >{{ item.id }}
+                  </p>
+                  <p class="item_name">{{ item.commonName }}</p>
+                </div>
+                <div class="item_quantity_buttons">
+                  <div class="item_quantity">
+                    <div class="item_quantity_value">
+                      <div class="item_quantity_header">Фасовка</div>
+                      <div class="item_quantity_value_choice">
+                        <select name="value_amount" id="" class="value_amount">
+                          <option value="КГ">КГ</option>
+                          <option value="ГРАММ">ГРАММ</option>
+                          <option value="Л">ЛИТР</option>
+                          <option value="МЛ">МЛ</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item_quantity">
+                    <div class="item_quantity_header">Количество</div>
+                    <div class="item_quantity_amount">
+                      <button
+                        type="button"
+                        class="minus"
+                        id="plus"
+                        @click="minusValue"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="text"
+                        placeholder="..."
+                        id="item_amount"
+                        class="amount"
+                      />
+                      <button
+                        class="plus"
+                        id="plus"
+                        type="button"
+                        @click="plusValue"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="item_price">{{ item.price }}</div>
+              <div class="item_price">
+                <CloseIcon class="basket_close_icon" />
+                <p class="item_current_price">
+                  {{ item?.price }}
+                  <span class="green-text">$</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
-        <div class="basket_current_price"></div>
+        <div class="basket_current_price">
+          <div class="basket_price_header">Оформление заказа</div>
+          <div class="basket_final_price">
+            <p class="final_price_text">ИТОГО :</p>
+            <p>14125 $</p>
+          </div>
+          <button class="final_price_bttn" type="button">ОФОРМИТЬ</button>
+          <p class="final_price_subtext">
+            если на вашем аккаунте есть <span class="blue_text">бонусы</span>,
+            вы сможете списать их в корзине
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -33,14 +101,219 @@
 
 <script>
 import { mapActions } from "vuex";
+import CloseIcon from "@/components/UI/icons/CloseIcon.vue";
 export default {
   name: "BasketPage",
   methods: { ...mapActions(["getAllItemsRequest"]) },
+  components: { CloseIcon },
   mounted() {
     this.getAllItemsRequest();
-    console.log(this.$store.getters?.getAllItemsList);
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.final_price_subtext {
+  width: 40%;
+  align-self: center;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+  color: #808080;
+  span {
+    color: #216ee3;
+  }
+}
+.final_price_bttn {
+  margin: 50px 0 20px 0;
+  padding: 15px 25px;
+  background: #14d8b5;
+  width: 50%;
+  align-self: center;
+  border-radius: 64px;
+  font-size: 16px;
+  color: #f7f7f7;
+}
+.basket_final_price {
+  display: flex;
+  justify-content: space-between;
+  width: 65%;
+  align-self: center;
+  margin-top: 50px;
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: 2%;
+}
+.basket_price_header {
+  display: flex;
+  justify-content: center;
+  border: none;
+  border-radius: 4px 4px 0 0;
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 400;
+  padding: 20px 0;
+  background: #f7f7f7;
+  color: #808080;
+}
+.basket_current_price {
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  max-height: 350px;
+  border: 1px solid #cdcdcd;
+  border-radius: 4px;
+}
+.item_current_price {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: -2%;
+  margin: 10px 20px 0 0;
+  .green-text {
+    color: #14d8b5;
+  }
+}
+.item_quantity_header {
+  color: #808080;
+  font-size: 16px;
+}
+.item_name {
+  margin-top: 10px;
+  font-weight: 700;
+  color: #2c2c2c;
+  font-size: 24px;
+  line-height: 24px;
+}
+.item_articule {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 12px;
+  color: #2c2c2c;
+  .item_articule_text {
+    color: #808080;
+  }
+}
+.item_info_content {
+  margin: 0px 0px 0px 20px;
+}
+.item_quantity_value_choice {
+  width: 120px;
+  .value_amount {
+    padding: 16px 30px;
+    outline: none;
+    border: 1px solid #cdcdcd;
+    border-radius: 4px;
+    background-image: url("../components/UI/icons/ArrowDown.png");
+    background-position: 90% 50%;
+  }
+}
+.item_quantity_amount {
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #cdcdcd;
+  button {
+    font-size: 35px;
+    font-weight: 400;
+    color: #cdcdcd;
+  }
+  .plus {
+    margin: 0 10px 5px 0;
+  }
+  .minus {
+    margin: 0 0 5px 10px;
+  }
+}
+.item_quantity {
+  margin: 0 20px 0 0;
+  .amount {
+    width: 100px;
+    padding: 10px 30px;
+    outline: none;
+    text-align: center;
+    font-size: 18px;
+  }
+}
+.item_quantity_buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.item_info_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.basket_pointers {
+  margin: 20px 0 50px 0;
+}
+.basket_pointer {
+  margin: 0 10px 0 0;
+  border: 1px solid #cdcdcd;
+  padding: 5px 20px;
+  border-radius: 64px;
+  color: #808080;
+  font-size: 14px;
+}
+.basket_items_header {
+  font-family: Helvetica;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 48px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin: 0 0 40px 0;
+}
+.basket_items {
+  display: flex;
+  flex-direction: column;
+  width: 55%;
+}
+.basket_item_info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.basket_item {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 40px 0;
+  padding: 10px;
+  border: 1px solid #cdcdcd;
+  border-radius: 4px;
+}
+.basket_close_icon {
+  display: flex;
+  justify-content: right;
+  svg {
+    object-position: 0% 100px;
+  }
+}
+.basket_items_list {
+  display: flex;
+  justify-content: space-between;
+}
+.basket_block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.basket_block_content {
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+}
+.basket_img {
+  svg {
+    width: 180px;
+    height: 180px;
+  }
+}
+.basket_pointers {
+  .green_bttn {
+    border: #14d8b5 1px solid;
+  }
+}
+</style>

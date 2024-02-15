@@ -14,8 +14,10 @@ import CopySvgButton from "./icons/CopySvgButton.vue";
 import StatisticsSvgButton from "./icons/StatisticsSvgButton.vue";
 import HeartIcon from "./icons/HeartIcon.vue";
 import HeaderMyProfileIcon from "./icons/HeaderMyProfile.vue";
+import CloseIcon from "./icons/CloseIcon.vue";
 
 export {
+  CloseIcon,
   HeaderLogo,
   HeaderOptions,
   FirstBlockSvg,

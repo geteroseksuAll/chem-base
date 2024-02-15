@@ -16,7 +16,7 @@
 </template>
 
 <script>
-export default {};
+export default { name: "HeaderMyProfileIcon" };
 </script>
 
 <style lang="scss" scoped></style>

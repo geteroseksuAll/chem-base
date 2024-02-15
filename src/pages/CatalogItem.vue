@@ -148,62 +148,14 @@
                       }}
                       <span class="green-text">$</span>
                     </p>
-                    <div class="item_amount_value_choice">
-                      <select
-                        v-model="this.currentItemSystem"
-                        name="value_amount"
-                        id=""
-                        class="value_amount"
-                      >
-                        <option value="КГ">КГ</option>
-                        <option value="ГРАММ">ГРАММ</option>
-                      </select>
-                    </div>
-                    <div class="item_current_amount">
-                      <button
-                        type="button"
-                        class="minus"
-                        id="plus"
-                        @click="minusValue"
-                      >
-                        -
-                      </button>
-                      <input
-                        type="text"
-                        placeholder="КГ"
-                        id="item_amount"
-                        class="amount"
-                        v-model="this.currentItemAmount"
-                      />
-                      <button
-                        class="plus"
-                        id="plus"
-                        type="button"
-                        @click="plusValue"
-                      >
-                        +
-                      </button>
-                    </div>
+
                     <button
                       type="button"
                       class="item_buy_button"
                       @click="openForm"
                     >
-                      КУПИТЬ
+                      В КОРЗИНУ
                     </button>
-                    <DialogMenu
-                      v-model:show="dialogVisible"
-                      :nameItem="this.currentItem?.commonName"
-                      :amountItem="
-                        this.currentItemAmount + ' ' + this.currentItemSystem
-                      "
-                      :id="currentItem?.id"
-                      :priceItem="
-                        currentItem?.price *
-                        currentItemAmount *
-                        currentItemValue
-                      "
-                    />
                     <div class="item_bottom_bonus-text_block">
                       <p class="item_bottom_bonus-text">
                         если на вашем аккаунте есть
@@ -224,7 +176,6 @@
 
 <script>
 import { mapActions } from "vuex";
-import DialogMenu from "../components/DialogMenu.vue";
 import {
   StatisticsSvgButton,
   CopySvgButton,
@@ -352,7 +303,6 @@ export default {
     CopySvgButton,
     StatisticsSvgButton,
     HeartIcon,
-    DialogMenu,
   },
 };
 </script>
@@ -456,6 +406,7 @@ select {
   text-align: center;
 }
 .item_current_price {
+  margin: 0 0 50px 0;
   font-size: 32px;
   font-weight: 550;
   line-height: 64px;
