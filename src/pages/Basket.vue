@@ -2,7 +2,14 @@
   <div class="basket_block">
     <div class="basket_block_content">
       <div class="basket_pointers">
-        <button type="button" class="basket_pointer">главная</button
+        <router-link to="/">
+          <button type="button" class="basket_pointer">
+            главная
+          </button></router-link
+        ><router-link to="/catalog/search?search=">
+          <button type="button" class="basket_pointer">
+            каталог
+          </button></router-link
         ><button type="button" class="basket_pointer green_bttn">
           корзина
         </button>

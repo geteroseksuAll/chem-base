@@ -58,8 +58,14 @@
         <HeaderHeartIcon />
         <HeaderBasketIcon
           style="cursor: pointer"
-          @click="this.$router.push('/basket')"
+          v-if="!isLoggedIn"
+          @click="openRegistration"
         />
+        <router-link v-if="isLoggedIn" to="/basket">
+          <HeaderBasketIcon
+            style="cursor: pointer; color: inherit; text-decoration: none"
+          />
+        </router-link>
       </div>
       <RegistrationMenu v-model:show="dialogVisible" />
     </div>
@@ -96,6 +102,7 @@ export default {
     pushMainPage() {
       this.$router.push("/");
     },
+
     openRegistration() {
       this.dialogVisible = true;
     },

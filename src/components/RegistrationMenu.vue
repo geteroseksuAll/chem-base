@@ -15,11 +15,15 @@
           type="email"
           placeholder="Введите email"
           name="email"
+          id="emailReg"
           class="input_registration"
           v-model="emailReg"
           required
           autofocus
         />
+        <p class="registration_confirm_email deleted" id="emailCheck">
+          Пользователь с таким логином существует
+        </p>
         <input
           type="password"
           name="password"
@@ -37,6 +41,9 @@
           @blur="passwordConfirmation"
           required
         />
+        <p class="registration_confirm_text deleted" id="confirmationText">
+          Пароли не совпадают
+        </p>
         <button
           type="submit"
           class="registration-button"
@@ -57,6 +64,7 @@
         <div class="registration_content" @click.stop>
           <input
             type="email"
+            id="emailLog"
             placeholder="Введите email"
             name="email"
             class="input_registration"
@@ -66,12 +74,15 @@
           <input
             type="password"
             name="password"
-            id=""
+            id="passwordLog"
             placeholder="Введите пароль"
             class="input_registration"
             v-model="passwordLog"
             required
           />
+          <p id="loginCheckText" class="registration_confirm_text deleted">
+            Неправильный логин или пароль
+          </p>
           <button
             type="submit"
             class="registration-button"
@@ -135,25 +146,93 @@ export default {
       }
     },
     async onRegister() {
+      let confirmationText = document.getElementById("confirmationText");
+      let confirmationInput = document.getElementsByName("password");
+      let emailInput = document.getElementById("emailReg");
+      let emailCheckText = document.getElementById("emailCheck");
+
       let email = this.emailReg;
       let password = this.passwordReg;
-      this.register({
-        email,
-        password,
-      }).then(() => location.reload());
+      if (this.letRegister) {
+        confirmationText.classList.add("deleted");
+        confirmationInput[0].classList.remove("redBorder");
+        confirmationInput[1].classList.remove("redBorder");
+
+        emailInput.classList.remove("redBorder");
+        emailCheckText.classList.add("deleted");
+
+        this.register({
+          email,
+          password,
+        })
+          .then((error) => {
+            if (!error) {
+              location.reload();
+            }
+          })
+          .catch((error) => {
+            if (error.response) {
+              if (error.response.status == 403) {
+                emailInput.classList.add("redBorder");
+                emailCheckText.classList.remove("deleted");
+              }
+            }
+          });
+      } else {
+        confirmationText.classList.remove("deleted");
+        confirmationInput[0].classList.add("redBorder");
+        confirmationInput[1].classList.add("redBorder");
+        emailInput.classList.remove("redBorder");
+        emailCheckText.classList.add("deleted");
+      }
     },
     onLogin() {
       let email = this.emailLog;
       let password = this.passwordLog;
+
+      let loginCheckText = document.getElementById("loginCheckText");
+      let emailInput = document.getElementById("emailLog");
+      let passwordInput = document.getElementById("passwordLog");
+
+      loginCheckText.classList.add("deleted");
+      emailInput.classList.remove("redBorder");
+      passwordInput.classList.remove("redBorder");
+
       this.login({ email, password })
-        .then(() => location.reload())
-        .catch((err) => console.log(err));
+        .then((error) => {
+          if (!error) {
+            location.reload();
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            if (error.response.status == 403) {
+              emailInput.classList.add("redBorder");
+              passwordInput.classList.add("redBorder");
+              loginCheckText.classList.remove("deleted");
+            }
+          }
+        });
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.registration_confirm_email {
+  margin-top: 5px;
+  font-weight: 400;
+  color: red;
+  text-align: center;
+  font-size: 14px;
+}
+.registration_confirm_text {
+  margin-top: 5px;
+  font-weight: 400;
+  color: red;
+  text-align: center;
+  font-size: 14px;
+}
 input {
   border: 1px solid #5d5d5d;
   padding: 20px 64px 20px 16px;
@@ -178,6 +257,7 @@ input {
   color: #216ee3;
 }
 .registration-button {
+  margin-top: 30px;
   padding: 20px 50px;
   border-radius: 64px;
   background: #14d8b5;
@@ -188,8 +268,8 @@ input {
   letter-spacing: 0.02em;
   color: #f7f7f7;
 }
-.input_registration {
-  margin-bottom: 30px;
+.input_registration:not(:first-of-type) {
+  margin-top: 30px;
   background: #fff;
 }
 .registration_content {
@@ -210,5 +290,11 @@ input {
   background: rgb(0, 0, 0, 0.5);
   position: fixed;
   z-index: 10000;
+}
+.deleted {
+  display: none;
+}
+.redBorder {
+  border: 1px solid red;
 }
 </style>

@@ -3,10 +3,11 @@
     <div class="item-page_content">
       <div class="item-page-info_block">
         <div class="item-page_links">
-          <button class="pages_link">В каталог</button>
-          <button class="pages_link">Прекурсоры</button>
-          <button class="pages_link">Калий</button>
-          <button class="pages_link">Соли неорганических кислот</button>
+          <router-link
+            to="/catalog/search?search="
+            style="text-decoration: none; color: inherit"
+            ><button class="pages_link">В каталог</button></router-link
+          >
         </div>
         <div class="item-page_information">
           <div class="item-main_info">

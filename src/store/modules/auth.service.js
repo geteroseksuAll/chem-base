@@ -40,8 +40,8 @@ export default {
         commit("auth_success", token, userData);
       } catch (error) {
         commit("auth_error", error);
-        console.log(error);
         localStorage.removeItem("token");
+        throw error;
       }
     },
     async register({ commit }, params) {
@@ -59,9 +59,9 @@ export default {
 
         commit("auth_success", token, userData);
       } catch (error) {
-        console.log(error);
         commit("auth_error", error);
         localStorage.removeItem("token");
+        throw error;
       }
     },
     logout({ commit }) {
