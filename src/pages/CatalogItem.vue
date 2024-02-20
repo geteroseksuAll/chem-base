@@ -16,11 +16,17 @@
             </h1>
             <div></div>
             <div class="item-info_block">
-              <div class="item_image_block" v-if="currentItem">
+              <div
+                class="item_image_block"
+                v-if="currentItem && currentItem.image"
+              >
                 <div
                   class="item_image"
                   v-html="deleteAllBackSlashesMain(currentItem.image)"
                 ></div>
+              </div>
+              <div class="item_image_block" v-else>
+                <div class="item_image">Фото не доступно</div>
               </div>
               <ul class="item-info_list">
                 <li
@@ -116,9 +122,9 @@
                     <CatalogItemPropertiesSvg />
                   </div>
                 </div>
-                <p class="name_info_description">
-                  {{ currentItem?.formula }}
-                </p>
+                <div class="name_info_description" v-if="currentItem?.formula">
+                  <div v-html="clearFormula(currentItem?.formula)"></div>
+                </div>
                 <div class="name_info_bottom_items">
                   <div class="bottom_item_info_svg">
                     <CatalogItemPropertiesSvg />
@@ -153,7 +159,7 @@
                     <button
                       type="button"
                       class="item_buy_button"
-                      @click="openForm"
+                      @click="setItemToCartMethod(currentItem?.id)"
                     >
                       В КОРЗИНУ
                     </button>
@@ -229,7 +235,11 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["getAllItemsRequest", "getPopularItemsRequest"]),
+    ...mapActions([
+      "getAllItemsRequest",
+      "setItemToCart",
+      "getPopularItemsRequest",
+    ]),
 
     deleteAllBackSlashesMain(str) {
       let cleanedStr = str.replace(/\\/g, "");
@@ -253,6 +263,12 @@ export default {
       return cleanedStr;
     },
 
+    clearFormula(str) {
+      let cleanedFormula = str.replaceAll("_{", "<sub>");
+      cleanedFormula = cleanedFormula.replaceAll("}", "</sub>");
+      return cleanedFormula;
+    },
+
     openForm() {
       this.dialogVisible = true;
     },
@@ -269,6 +285,10 @@ export default {
       if (this.currentItemAmount > 0) {
         this.currentItemAmount = parseInt(this.currentItemAmount) - 1;
       }
+    },
+    setItemToCartMethod(id) {
+      console.log(id);
+      this.setItemToCart({ id: id });
     },
   },
 

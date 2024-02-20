@@ -13,7 +13,6 @@ export default {
     auth_success(state, token) {
       state.status = "success";
       state.token = token;
-      console.log(token);
     },
     auth_error(state) {
       state.status = "error";
@@ -27,12 +26,10 @@ export default {
     async login({ commit }, params) {
       try {
         commit("auth_request");
-        console.log(params);
         const response = await axios.post(
           "http://localhost:7000/api/v1/auth/login",
           params
         );
-        console.log("сработало");
         const token = response.data.token;
         const userData = response.data.user;
         localStorage.setItem("token", token);
@@ -47,16 +44,13 @@ export default {
     async register({ commit }, params) {
       try {
         commit("auth_request");
-        console.log(params);
         const response = await axios.post(
           "http://localhost:7000/api/v1/auth/registration",
           params
         );
-        console.log("сработало");
         const token = response.data.token;
         const userData = response.data.user;
         localStorage.setItem("token", token);
-
         commit("auth_success", token, userData);
       } catch (error) {
         commit("auth_error", error);

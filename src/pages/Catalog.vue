@@ -11,9 +11,10 @@
         </p>
         <p class="catalog_block_header_text" v-else>Каталог продукции</p>
         <p class="catalog_block_header_subtext deleted" id="subtext">
-          Не удалось ничего найти по запросу "{{
-            this.$route.query.search
-          }}"<span class="subtext_mini">Попробуйте поискать по-другому</span>
+          Не удалось ничего найти по запросу "
+          {{ this.$route.query.search }}"<span class="subtext_mini"
+            >Попробуйте поискать по-другому</span
+          >
         </p>
       </div>
       <div class="catalog_block_items" id="blockItems">

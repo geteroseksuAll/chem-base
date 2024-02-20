@@ -19,22 +19,22 @@
         <div class="basket_items">
           <div
             class="basket_item"
-            v-for="item in this.$store.getters?.getAllItemsList"
-            :key="item.id"
+            v-for="item in this.$store.getters?.getBasketAllItems"
+            :key="item.productDTO.id"
           >
             <div
               class="basket_img"
-              v-if="item?.image"
-              v-html="item?.image"
+              v-if="item.productDTO?.image"
+              v-html="item.productDTO?.image"
             ></div>
-            <div class="basket_item_info" v-if="item?.image">
+            <div class="basket_item_info" v-if="item.productDTO?.image">
               <div class="item_info_content">
                 <div class="item_text_info">
                   <p class="item_articule">
                     <span class="item_articule_text">артикул : </span
-                    >{{ item.id }}
+                    >{{ item.productDTO.id }}
                   </p>
-                  <p class="item_name">{{ item.commonName }}</p>
+                  <p class="item_name">{{ item.productDTO.commonName }}</p>
                 </div>
                 <div class="item_quantity_buttons">
                   <div class="item_quantity">
@@ -63,15 +63,19 @@
                       </button>
                       <input
                         type="text"
-                        placeholder="..."
+                        :placeholder="item?.count"
                         id="item_amount"
                         class="amount"
+                        v-model="item.count"
+                        @change="
+                          setItemAmountMethod(item.productDTO.id, item.count)
+                        "
                       />
                       <button
                         class="plus"
                         id="plus"
                         type="button"
-                        @click="plusValue"
+                        @click="item.count = item?.count + 1"
                       >
                         +
                       </button>
@@ -82,7 +86,7 @@
               <div class="item_price">
                 <CloseIcon class="basket_close_icon" />
                 <p class="item_current_price">
-                  {{ item?.price }}
+                  {{ item?.productDTO.price }}
                   <span class="green-text">$</span>
                 </p>
               </div>
@@ -111,10 +115,16 @@ import { mapActions } from "vuex";
 import CloseIcon from "@/components/UI/icons/CloseIcon.vue";
 export default {
   name: "BasketPage",
-  methods: { ...mapActions(["getAllItemsRequest"]) },
+  methods: {
+    ...mapActions(["getBasketAllItemsRequest", "setItemAmount"]),
+    setItemAmountMethod(id, count) {
+      const countt = parseInt(count);
+      this.setItemAmount({ id: id, count: countt });
+    },
+  },
   components: { CloseIcon },
   mounted() {
-    this.getAllItemsRequest();
+    this.getBasketAllItemsRequest();
   },
 };
 </script>
