@@ -36,14 +36,15 @@ export default {
       store.commit("changePopularItemsList", listOfPopularItems);
       return listOfPopularItems;
     },
-    async setTransfer(context, { params, id, price, name, amount }) {
+    async setTransfer(context, { params, price, basketDTO }) {
       const headers = {
         "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
       };
       const result = await axios
         .post(
-          `http://localhost:7000/api/v1/catalog/${id}`,
-          { ...params, price, productName: name, amount },
+          `http://localhost:7000/api/v1/basket/send-email`,
+          { ...params, price, basketDTO },
           { headers: headers }
         )
         .catch((error) => {

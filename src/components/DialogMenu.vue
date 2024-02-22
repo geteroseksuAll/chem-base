@@ -3,15 +3,12 @@
     <div class="dialog__content-block">
       <div class="dialog__content" @click.stop>
         <div class="dialog__content_text_block">
-          <div class="dialog__content_text">
-            <h1>Отправьте заявку на заказ:</h1>
-            <h4>Название: {{ nameItem }}</h4>
-            <h4>Количество: {{ amountItem }}</h4>
-            <h4>Цена: {{ priceItem }} xdr</h4>
-            <h4 class="dialog__context_bottom">
-              Заполните форму, отправьте ее нам, мы с Вами свяжемся!
-            </h4>
-          </div>
+          <h1>Отправьте заявку на заказ:</h1>
+          <div
+            class="dialog__content_text"
+            v-for="item in this.$store.getters?.getBasketAllItems"
+            :key="item.id"
+          ></div>
           <div class="dialog__content_buy-bttn" id="dialog__content_buy-bttn">
             <button type="button" id="postForm" class="" @click="postMethod">
               Оформить заказ
@@ -164,6 +161,7 @@ export default {
         fullName: "",
         phoneNumber: "",
       },
+      basketDTO: [],
     };
   },
   props: {
@@ -171,23 +169,31 @@ export default {
       type: Boolean,
       default: false,
     },
-    priceItem: { default: Number },
-    nameItem: { type: String },
-    amountItem: { type: String },
-    id: { Type: Number },
+    totalPrice: { default: Number },
   },
   methods: {
-    ...mapActions(["setTransfer"]),
+    ...mapActions(["setTransfer", "getBasketAllItemsRequest"]),
     hideDialog() {
       this.$emit("update:show", false);
     },
     async postMethod() {
+      const basketAllItems = this.$store.getters.getBasketAllItems;
+      this.basketDTO = [];
+      for (let i = 0; i < basketAllItems.length; i++) {
+        this.basketDTO.push({
+          count: basketAllItems[i].count,
+          units: basketAllItems[i].units,
+          productDTO: {
+            id: basketAllItems[i].productDTO.id,
+            commonName: basketAllItems[i].productDTO.commonName,
+          },
+        });
+      }
+
       this.setTransfer({
         params: this.params,
-        price: this.$props.priceItem,
-        name: this.$props.nameItem,
-        amount: this.$props.amountItem,
-        id: this.$props.id,
+        price: this.$props.totalPrice,
+        basketDTO: this.basketDTO,
       })
         .then((response) => {
           if (response.data == "OK") {
@@ -238,7 +244,7 @@ export default {
   width: 40%;
   h1 {
     font-size: 30px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     font-weight: 400;
   }
   h4 {

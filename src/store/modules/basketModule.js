@@ -8,6 +8,11 @@ export default {
     changeBasketAllItems(state, data) {
       state.basketAllItems = data;
     },
+    deleteItemById(state, id) {
+      state.basketAllItems = state.basketAllItems.filter(
+        (item) => item.productDTO.id != id
+      );
+    },
   },
   actions: {
     async getBasketAllItemsRequest() {
@@ -21,6 +26,20 @@ export default {
       store.commit("changeBasketAllItems", allItems);
       return allItems;
     },
+
+    async deleteItemFromCart(context, { id }) {
+      const params = { id: id };
+      const headers = {
+        Authorization: localStorage.getItem("token"),
+      };
+      const result = await axios.delete(`http://localhost:7000/api/v1/basket`, {
+        headers: headers,
+        params,
+      });
+      context.commit("deleteItemById", id);
+      return result;
+    },
+
     async setItemToCart(context, { id }) {
       const headers = {
         Authorization: localStorage.getItem("token"),
@@ -41,6 +60,24 @@ export default {
       const params = {
         productId: id,
         count: count,
+      };
+      const result = await axios.patch(
+        `http://localhost:7000/api/v1/basket`,
+        params,
+        {
+          headers: headers,
+        }
+      );
+      return result;
+    },
+
+    async setItemUnits(context, { id, units }) {
+      const headers = {
+        Authorization: localStorage.getItem("token"),
+      };
+      const params = {
+        productId: id,
+        units: units,
       };
       const result = await axios.patch(
         `http://localhost:7000/api/v1/basket`,

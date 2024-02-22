@@ -41,10 +41,18 @@
                     <div class="item_quantity_value">
                       <div class="item_quantity_header">Фасовка</div>
                       <div class="item_quantity_value_choice">
-                        <select name="value_amount" id="" class="value_amount">
+                        <select
+                          name="value_amount"
+                          id=""
+                          class="value_amount"
+                          v-model="item.units"
+                          @change="
+                            setItemUnitsMethod(item.productDTO.id, item.units)
+                          "
+                        >
                           <option value="КГ">КГ</option>
                           <option value="ГРАММ">ГРАММ</option>
-                          <option value="Л">ЛИТР</option>
+                          <option value="ЛИТР">ЛИТР</option>
                           <option value="МЛ">МЛ</option>
                         </select>
                       </div>
@@ -57,7 +65,15 @@
                         type="button"
                         class="minus"
                         id="plus"
-                        @click="minusValue"
+                        @click="
+                          if (item.count > 1) {
+                            setItemAmountMethod(
+                              item.productDTO.id,
+                              parseInt(item.count) - 1
+                            );
+                            item.count = parseInt(item.count) - 1;
+                          }
+                        "
                       >
                         -
                       </button>
@@ -67,15 +83,19 @@
                         id="item_amount"
                         class="amount"
                         v-model="item.count"
-                        @change="
-                          setItemAmountMethod(item.productDTO.id, item.count)
-                        "
+                        @input="checkItemCount(item)"
                       />
                       <button
                         class="plus"
                         id="plus"
                         type="button"
-                        @click="item.count = item?.count + 1"
+                        @click="
+                          setItemAmountMethod(
+                            item.productDTO.id,
+                            parseInt(item.count) + 1
+                          );
+                          item.count = parseInt(item.count) + 1;
+                        "
                       >
                         +
                       </button>
@@ -84,9 +104,19 @@
                 </div>
               </div>
               <div class="item_price">
-                <CloseIcon class="basket_close_icon" />
+                <CloseIcon
+                  class="basket_close_icon"
+                  @click="deleteItemFromCartMethod(item.productDTO.id)"
+                  style="cursor: pointer"
+                />
                 <p class="item_current_price">
-                  {{ item?.productDTO.price }}
+                  {{
+                    setItemPrice(
+                      item?.productDTO.price *
+                        item.count *
+                        checkItemAmount(item.units)
+                    )
+                  }}
                   <span class="green-text">$</span>
                 </p>
               </div>
@@ -97,9 +127,21 @@
           <div class="basket_price_header">Оформление заказа</div>
           <div class="basket_final_price">
             <p class="final_price_text">ИТОГО :</p>
-            <p>14125 $</p>
+            <p class="final_price_text">
+              {{ checkItemsPrice() }} <span class="green-text">$</span>
+            </p>
           </div>
-          <button class="final_price_bttn" type="button">ОФОРМИТЬ</button>
+          <button
+            class="final_price_bttn"
+            type="button"
+            @click="dialogVisible = !dialogVisible"
+          >
+            ОФОРМИТЬ
+          </button>
+          <DialogMenu
+            v-model:show="dialogVisible"
+            :totalPrice="checkItemsPrice()"
+          />
           <p class="final_price_subtext">
             если на вашем аккаунте есть <span class="blue_text">бонусы</span>,
             вы сможете списать их в корзине
@@ -112,17 +154,72 @@
 
 <script>
 import { mapActions } from "vuex";
+import DialogMenu from "@/components/DialogMenu.vue";
 import CloseIcon from "@/components/UI/icons/CloseIcon.vue";
 export default {
   name: "BasketPage",
+  data: () => ({ dialogVisible: false }),
   methods: {
-    ...mapActions(["getBasketAllItemsRequest", "setItemAmount"]),
+    ...mapActions([
+      "getBasketAllItemsRequest",
+      "setItemAmount",
+      "deleteItemFromCart",
+      "setItemUnits",
+    ]),
     setItemAmountMethod(id, count) {
       const countt = parseInt(count);
       this.setItemAmount({ id: id, count: countt });
     },
+
+    setItemPrice(value) {
+      if (value % 1 > 0) {
+        return value.toFixed(3);
+      } else {
+        return value;
+      }
+    },
+
+    setItemUnitsMethod(id, units) {
+      const unitss = units;
+      this.setItemUnits({ id: id, units: unitss });
+    },
+
+    checkItemCount(item) {
+      if (item.count == "") {
+        return;
+      }
+      if (item.count > 0) {
+        this.setItemAmountMethod(item.productDTO.id, item.count);
+      } else {
+        item.count = 1;
+        this.setItemAmountMethod(item.productDTO.id, item.count);
+      }
+    },
+    checkItemsPrice() {
+      let totalPrice = 0;
+      let basketItems = this.$store.getters?.getBasketAllItems;
+      for (let i = 0; i < basketItems.length; i++) {
+        totalPrice +=
+          basketItems[i].productDTO.price *
+          basketItems[i].count *
+          this.checkItemAmount(basketItems[i].units);
+      }
+      return this.setItemPrice(totalPrice);
+    },
+    deleteItemFromCartMethod(id) {
+      this.deleteItemFromCart({ id: id });
+    },
+
+    checkItemAmount(str) {
+      if (str == "КГ" || str == "ЛИТР") {
+        return 1;
+      }
+      if (str == "ГРАММ" || str == "МЛ") {
+        return 0.001;
+      }
+    },
   },
-  components: { CloseIcon },
+  components: { CloseIcon, DialogMenu },
   mounted() {
     this.getBasketAllItemsRequest();
   },
@@ -161,6 +258,12 @@ export default {
   line-height: 24px;
   font-weight: 600;
   letter-spacing: 2%;
+}
+.final_price_text {
+  transition: 0.3s ease;
+  .green-text {
+    color: #14d8b5;
+  }
 }
 .basket_price_header {
   display: flex;

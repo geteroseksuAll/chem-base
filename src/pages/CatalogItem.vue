@@ -129,9 +129,9 @@
                   <div class="bottom_item_info_svg">
                     <CatalogItemPropertiesSvg />
                   </div>
-                  <div class="copy_button_svg">
+                  <!-- <div class="copy_button_svg">
                     <CopySvgButton />
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="item_buy-menu">
@@ -157,12 +157,36 @@
                     </p>
 
                     <button
+                      v-if="isLoggedIn && !inTheCart"
                       type="button"
                       class="item_buy_button"
                       @click="setItemToCartMethod(currentItem?.id)"
+                      id="toCart"
                     >
                       В КОРЗИНУ
                     </button>
+
+                    <button
+                      v-else-if="isLoggedIn && inTheCart"
+                      type="button"
+                      class="item_buy_button changed"
+                      id="toCart"
+                      @click="this.$router.push('/basket')"
+                    >
+                      В КОРЗИНE
+                    </button>
+
+                    <button
+                      v-else-if="!isLoggedIn"
+                      type="button"
+                      class="item_buy_button"
+                      @click="openRegistration()"
+                    >
+                      В КОРЗИНУ
+                    </button>
+
+                    <RegistrationMenu v-model:show="dialogVisible" />
+
                     <div class="item_bottom_bonus-text_block">
                       <p class="item_bottom_bonus-text">
                         если на вашем аккаунте есть
@@ -182,6 +206,7 @@
 </template>
 
 <script>
+import RegistrationMenu from "@/components/RegistrationMenu.vue";
 import { mapActions } from "vuex";
 import {
   StatisticsSvgButton,
@@ -198,6 +223,7 @@ export default {
     var currentItemValue = 1;
     const dialogVisible = false;
     const showSpec = false;
+    const intoCart = false;
 
     const types = {
       aLotOfItems: {
@@ -232,6 +258,7 @@ export default {
       currentItemValue,
       dialogVisible,
       showSpec,
+      intoCart,
     };
   },
   methods: {
@@ -239,7 +266,12 @@ export default {
       "getAllItemsRequest",
       "setItemToCart",
       "getPopularItemsRequest",
+      "getBasketAllItemsRequest",
     ]),
+
+    openRegistration() {
+      this.dialogVisible = true;
+    },
 
     deleteAllBackSlashesMain(str) {
       let cleanedStr = str.replace(/\\/g, "");
@@ -287,8 +319,13 @@ export default {
       }
     },
     setItemToCartMethod(id) {
-      console.log(id);
-      this.setItemToCart({ id: id });
+      let toCartButton = document.getElementById("toCart");
+
+      this.setItemToCart({ id: id }).then((resp) => {
+        if (resp.status == 200) {
+          toCartButton.classList.add("changed");
+        }
+      });
     },
   },
 
@@ -299,6 +336,22 @@ export default {
       );
       return currentItem;
     },
+
+    inTheCart() {
+      const currentItem = this.$store.getters.getBasketAllItems?.find(
+        (item) => item.productDTO.id == this.$route.params.id
+      );
+      if (currentItem) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
+    },
+
     popularItemsArray() {
       const popularItemsArray = this.$store.getters?.getPopularItemsList;
 
@@ -308,6 +361,9 @@ export default {
   mounted() {
     this.getPopularItemsRequest();
     this.getAllItemsRequest();
+    if (this.isLoggedIn) {
+      this.getBasketAllItemsRequest();
+    }
   },
   watch: {
     currentItemSystem() {
@@ -324,6 +380,7 @@ export default {
     CopySvgButton,
     StatisticsSvgButton,
     HeartIcon,
+    RegistrationMenu,
   },
 };
 </script>
@@ -469,7 +526,7 @@ select {
 .name_info_top_items {
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
 }
 .name_info_description {
   text-align: center;
@@ -629,5 +686,9 @@ ul {
 .activeImg {
   transform: rotateX(180deg);
   transition: 0.5s;
+}
+.changed {
+  background: #e0fff9;
+  color: #14d8b5;
 }
 </style>
