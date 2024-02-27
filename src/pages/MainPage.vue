@@ -36,30 +36,24 @@
             type="button"
             class="second-section-middle-button green-bttn"
             id="search"
+            v-if="!isLoggedIn"
+            @click="openRegistration"
           >
-            <p
-              v-if="!isLoggedIn"
-              class="second-section_middle__button-text"
-              @click="openRegistration"
-            >
-              Зарегистрироваться
-            </p>
-            <p
-              v-else
-              class="second-section_middle__button-text"
-              @click="onLogout"
-            >
-              Выйти из аккаунта
-            </p>
+            <p class="second-section_middle__button-text">Зарегистрироваться</p>
+          </button>
+          <button
+            type="button"
+            class="second-section-middle-button green-bttn"
+            id="search"
+            v-if="isLoggedIn"
+            @click="onLogout"
+          >
+            <p class="second-section_middle__button-text">Выйти из аккаунта</p>
           </button>
           <RegistrationMenu v-model:show="dialogVisible" />
         </div>
         <div class="second-section_bottom">
-          <p class="second-section_bottom__text">
-            <span class="green-text">+</span>
-            доставка в любую<br />
-            точку мира.*
-          </p>
+          <p class="second-section_bottom__text"></p>
         </div>
       </div>
     </div>
@@ -131,6 +125,7 @@ export default {
   text-transform: uppercase;
 }
 .second-section_bottom__text {
+  height: 200px;
   margin: 0 0 0 57%;
   padding-bottom: 60px;
   color: var(--black-base, #2c2c2c);
@@ -152,7 +147,7 @@ export default {
 .second-section_middle {
   display: flex;
   flex-direction: wrap;
-  margin-left: 20%;
+  margin-left: 35%;
 }
 .second-section-upper-img {
   position: absolute;

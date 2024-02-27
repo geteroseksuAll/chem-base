@@ -324,6 +324,8 @@ export default {
       this.setItemToCart({ id: id }).then((resp) => {
         if (resp.status == 200) {
           toCartButton.classList.add("changed");
+          toCartButton.textContent = "В КОРЗИНЕ";
+          this.getBasketAllItemsRequest(); //? нужно ли вообще
         }
       });
     },
