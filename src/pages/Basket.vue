@@ -6,7 +6,7 @@
           <button type="button" class="basket_pointer">
             главная
           </button></router-link
-        ><router-link to="/catalog/search?search=">
+        ><router-link to="/catalog">
           <button type="button" class="basket_pointer">
             каталог
           </button></router-link
@@ -226,7 +226,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .final_price_subtext {
   width: 40%;
   align-self: center;

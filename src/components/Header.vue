@@ -10,7 +10,7 @@
         </div>
         <router-link
           class="router_link_to_catalog"
-          :to="{ name: 'catalogSearch', query: { search: '' } }"
+          :to="{ name: 'catalogSearch' }"
         >
           <div class="catalog_link_section">
             <p class="catalog_link_section_text">Каталог</p>
@@ -27,14 +27,10 @@
           @keyup.enter="
             this.$router.push({
               name: 'catalogSearch',
-              query: { search: postData.fullName },
             })
           "
         />
-        <router-link
-          type="button"
-          :to="{ name: 'catalogSearch', query: { search: postData.fullName } }"
-        >
+        <router-link type="button" :to="{ name: 'catalogSearch' }">
           <img
             src="/icons/MagnifyingGlass.png"
             alt=""

@@ -84,7 +84,7 @@ export default {
   methods: {
     ...mapActions(["logout"]),
     catalogPath() {
-      this.$router.push("/catalog/search?search=");
+      this.$router.push("/catalog");
     },
     onLogout() {
       this.logout().then(() => this.$router.push("/"));

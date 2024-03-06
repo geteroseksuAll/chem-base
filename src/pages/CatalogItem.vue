@@ -4,7 +4,7 @@
       <div class="item-page-info_block">
         <div class="item-page_links">
           <router-link
-            to="/catalog/search?search="
+            to="/catalog"
             style="text-decoration: none; color: inherit"
             ><button class="pages_link">В каталог</button></router-link
           >
