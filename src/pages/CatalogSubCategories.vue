@@ -12,10 +12,14 @@
           </button></router-link
         >
       </div>
+      <div class="sub_categories_header">
+        {{ this.$store.getters.getSubSubCategoriesList.subcategoryName }}
+      </div>
       <div class="sub_categories_list">
         <router-link
           class="category_item"
-          v-for="item in this.$store.getters.getSubSubCategoriesList"
+          v-for="item in this.$store.getters.getSubSubCategoriesList
+            .subsubcategoryDTOList"
           :key="item.id"
           style="text-decoration: none; color: inherit"
           :to="{

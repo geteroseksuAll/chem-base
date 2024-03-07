@@ -12,25 +12,62 @@
           </button></router-link
         >
       </div>
+      <div class="sub_categories_header">
+        {{ this.$store.getters.getSubCategoriesList?.categoryName }}
+      </div>
       <div class="sub_categories_list">
-        <router-link
+        <div
           class="category_item"
-          v-for="item in this.$store.getters.getSubSubCategoriesList"
+          v-for="item in this.$store.getters.getSubCategoriesList
+            .subcategoryDTOList"
           :key="item.id"
-          style="text-decoration: none; color: inherit"
-          :to="{
-            path:
-              '/catalog/' +
-              item.name
-                .toLowerCase()
-                .replaceAll(' & ', '-')
-                .replaceAll(' ', '-')
-                .replaceAll(',', '') +
-              '/products',
-          }"
-          ><div class="item_image"><img src="/icons/mockupIcon.png" /></div>
-          <div class="item_name">{{ item.russianName }}</div></router-link
         >
+          <router-link
+            style="text-decoration: none; color: inherit"
+            :to="{
+              path:
+                '/catalog/' +
+                this.$route.params.category +
+                '/' +
+                item.name
+                  .toLowerCase()
+                  .replaceAll(' & ', '-')
+                  .replaceAll(' ', '-')
+                  .replaceAll(',', ''),
+            }"
+          >
+            <div class="item_image"><img src="/icons/mockupIcon.png" /></div>
+            <div class="item_name">
+              {{ item.russianName }}
+            </div>
+          </router-link>
+
+          <div class="item_sub-category_name">
+            <router-link
+              v-for="subCategory in item.subsubcategories"
+              :key="subCategory.id"
+              @mouseover="this.setHoveredName(subCategory.name)"
+              @mouseout="this.isHovering = ''"
+              style="text-decoration: none; color: inherit"
+              :to="{
+                path:
+                  '/catalog/' +
+                  subCategory.name
+                    .toLowerCase()
+                    .replaceAll(' & ', '-')
+                    .replaceAll(' ', '-')
+                    .replaceAll(',', '') +
+                  '/products',
+              }"
+            >
+              <p :class="{ hovered: isHovering == subCategory.name }">
+                <span @click="this.$router.push('/')">{{
+                  subCategory.russianName
+                }}</span>
+              </p>
+            </router-link>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -41,12 +78,14 @@ import { mapActions } from "vuex";
 
 export default {
   name: "CatalogMainCategoryBlock",
-  data: () => ({ isHovering: "" }),
+  data: () => ({
+    isHovering: "",
+  }),
 
   methods: {
-    ...mapActions(["getSubSubCategoriesListRequest"]),
+    ...mapActions(["getSubCategoriesListRequest"]),
     getSubSub() {
-      this.getSubSubCategoriesListRequest({
+      this.getSubCategoriesListRequest({
         name: this.$route.params.category,
       });
     },
@@ -57,6 +96,7 @@ export default {
 
   mounted() {
     this.getSubSub();
+    console.log(this.mainCategoryName);
   },
 };
 </script>
@@ -78,7 +118,7 @@ export default {
   flex-direction: column;
   margin: 10px;
   width: 22%;
-  height: 330px;
+  height: 335px;
 
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04),
     0px 0px 4px rgba(0, 0, 0, 0.04);
@@ -88,7 +128,9 @@ export default {
   transition: 0.3s;
 }
 .category_item:hover {
-  background: #f4f4f4;
+  img {
+    transform: scale(105%);
+  }
 }
 .categories_pointers {
   margin: 20px;
@@ -136,9 +178,6 @@ export default {
     object-fit: cover;
     color: transparent;
     object-position: center center;
-  }
-  img:hover {
-    transform: scale(103%);
   }
 }
 </style>

@@ -58,7 +58,8 @@
           <div class="sub-categories_content">
             <div
               class="sub-categories_list"
-              v-for="item in this.$store.getters.getSubCategoriesList"
+              v-for="item in this.$store.getters.getSubCategoriesList
+                .subcategoryDTOList"
               :key="item.id"
             >
               <div v-if="item && item.subsubcategories.length >= 1">
@@ -210,6 +211,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this.$store.getters.getSubCategoriesList);
     this.$store.state.searchList = [];
     var previousText = document.getElementById("maintext");
     var futureText = document.getElementById("subtext");

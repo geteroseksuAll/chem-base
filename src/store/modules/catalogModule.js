@@ -61,7 +61,7 @@ export default {
     },
     async getProductsListRequest(context, { name }) {
       const result = await axios.get(
-        `http://localhost:7000/api/v1/catalog/find-by-subsubcategory-name/${name}`
+        `http://localhost:7000/api/v1/catalog/find-by-subsubcategory-name/${name}/products`
       );
       store.commit("changeProductsList", result.data);
       return result;
