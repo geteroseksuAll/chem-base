@@ -11,6 +11,16 @@
             каталог
           </button></router-link
         >
+        <router-link :to="'/catalog/' + this.$route.params.category">
+          <button type="button" class="basket_pointer">
+            {{ this.$store.getters.getSubSubCategoriesList.categoryName }}
+          </button></router-link
+        >
+        <span>
+          <button type="button" class="basket_pointer green_bttn">
+            {{ this.$store.getters.getSubSubCategoriesList.subcategoryName }}
+          </button></span
+        >
       </div>
       <div class="sub_categories_header">
         {{ this.$store.getters.getSubSubCategoriesList.subcategoryName }}
@@ -49,7 +59,9 @@ import { mapActions } from "vuex";
 
 export default {
   name: "CatalogSubCategoriesBlock",
-  data: () => ({ isHovering: "" }),
+  data: () => ({
+    isHovering: "",
+  }),
 
   methods: {
     ...mapActions(["getSubSubCategoriesListRequest"]),
@@ -65,11 +77,19 @@ export default {
 
   mounted() {
     this.getSubSub();
+    console.log(this.$route.params);
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.sub_categories_header {
+  margin: 20px 0 20px 5px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 64px;
+  letter-spacing: -0.02em;
+}
 .item_more_button {
   position: absolute;
   display: flex;
@@ -162,6 +182,9 @@ export default {
 }
 .hovered {
   background: #f4f4f4;
+}
+.green_bttn {
+  border-color: #14d8b5;
 }
 
 .item_image {

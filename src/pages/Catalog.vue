@@ -74,11 +74,7 @@
                         .replaceAll(' ', '-')
                         .replaceAll(',', '') +
                       '/' +
-                      item.name
-                        .toLowerCase()
-                        .replaceAll(' & ', '-')
-                        .replaceAll(' ', '-')
-                        .replaceAll(',', ''),
+                      item.commandName,
                   }"
                 >
                   <p
@@ -93,14 +89,7 @@
                 <router-link
                   style="text-decoration: none; color: inherit"
                   :to="{
-                    path:
-                      '/catalog/' +
-                      item.name
-                        .toLowerCase()
-                        .replaceAll(' & ', '-')
-                        .replaceAll(' ', '-')
-                        .replaceAll(',', '') +
-                      '/products',
+                    path: '/catalog/' + item.commandName + '/products',
                   }"
                 >
                   <p
@@ -120,14 +109,7 @@
                   v-if="subCategory"
                   style="text-decoration: none; color: inherit"
                   :to="{
-                    path:
-                      '/catalog/' +
-                      subCategory.name
-                        .toLowerCase()
-                        .replaceAll(' & ', '-')
-                        .replaceAll(' ', '-')
-                        .replaceAll(',', '') +
-                      '/products',
+                    path: '/catalog/' + subCategory.commandName + '/products',
                   }"
                   >{{ subCategory.russianName }}</router-link
                 >

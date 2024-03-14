@@ -11,6 +11,11 @@
             каталог
           </button></router-link
         >
+        <span>
+          <button type="button" class="basket_pointer green_bttn">
+            {{ this.$store.getters.getSubCategoriesList?.categoryName }}
+          </button></span
+        >
       </div>
       <div class="sub_categories_header">
         {{ this.$store.getters.getSubCategoriesList?.categoryName }}
@@ -29,11 +34,7 @@
                 '/catalog/' +
                 this.$route.params.category +
                 '/' +
-                item.name
-                  .toLowerCase()
-                  .replaceAll(' & ', '-')
-                  .replaceAll(' ', '-')
-                  .replaceAll(',', ''),
+                item.commandName,
             }"
           >
             <div class="item_image"><img src="/icons/mockupIcon.png" /></div>
@@ -50,14 +51,7 @@
               @mouseout="this.isHovering = ''"
               style="text-decoration: none; color: inherit"
               :to="{
-                path:
-                  '/catalog/' +
-                  subCategory.name
-                    .toLowerCase()
-                    .replaceAll(' & ', '-')
-                    .replaceAll(' ', '-')
-                    .replaceAll(',', '') +
-                  '/products',
+                path: '/catalog/' + subCategory.commandName + '/products',
               }"
             >
               <p :class="{ hovered: isHovering == subCategory.name }">
@@ -102,6 +96,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.sub_categories_header {
+  margin: 20px 0 20px 5px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 64px;
+  letter-spacing: -0.02em;
+}
 .item_sub-category_name {
   font-size: 14px;
   font-weight: 400;
@@ -165,6 +166,9 @@ export default {
 }
 .hovered {
   background: #f4f4f4;
+}
+.green_bttn {
+  border-color: #14d8b5;
 }
 
 .item_image {

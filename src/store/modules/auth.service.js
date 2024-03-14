@@ -27,7 +27,7 @@ export default {
       try {
         commit("auth_request");
         const response = await axios.post(
-          "http://localhost:7000/api/v1/auth/login",
+          "http://5.35.84.50:8080/api/v1/auth/login",
           params
         );
         const token = response.data.token;
@@ -42,19 +42,29 @@ export default {
       }
     },
     async register({ commit }, params) {
+      console.log(1);
       try {
         commit("auth_request");
         const response = await axios.post(
-          "http://localhost:7000/api/v1/auth/registration",
+          "http://5.35.84.50:8080/api/v1/auth/registration-send-email",
           params
         );
-        const token = response.data.token;
-        const userData = response.data.user;
-        localStorage.setItem("token", token);
-        commit("auth_success", token, userData);
+        return response;
       } catch (error) {
         commit("auth_error", error);
-        localStorage.removeItem("token");
+        throw error;
+      }
+    },
+    async checkConfirmationCode({ commit }, params) {
+      try {
+        commit("auth_request");
+        const response = await axios.post(
+          "http://5.35.84.50:8080/api/v1/auth/registration-check-code",
+          params
+        );
+        return response;
+      } catch (error) {
+        commit("auth_error", error);
         throw error;
       }
     },

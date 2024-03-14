@@ -1,16 +1,17 @@
 <template>
-  <div
-    class="registration"
-    v-if="show"
-    @click.stop="hideDialog"
-    @keyup.enter="this.hideDialog"
-  >
+  <div class="registration" v-if="show">
     <form
       class="registration_content_block"
-      @submit.prevent="onRegister"
+      @submit.prevent="validateEmailReg"
       v-if="!swapLogin"
     >
-      <div class="registration_content" @click.stop>
+      <div class="registration_content" v-if="!swapText">
+        <img
+          class="close_svg"
+          src="/icons/closeIcon.svg"
+          alt=""
+          @click="this.hideDialog()"
+        />
         <input
           type="email"
           placeholder="Введите email"
@@ -24,31 +25,10 @@
         <p class="registration_confirm_email deleted" id="emailCheck">
           Пользователь с таким логином существует
         </p>
-        <input
-          type="password"
-          name="password"
-          placeholder="Введите пароль"
-          class="input_registration"
-          v-model="passwordReg"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Подтвердите пароль"
-          class="input_registration"
-          v-model="passwordConfirmationReg"
-          @blur="passwordConfirmation"
-          required
-        />
         <p class="registration_confirm_text deleted" id="confirmationText">
           Пароли не совпадают
         </p>
-        <button
-          type="submit"
-          class="registration-button"
-          @click="validateEmailReg"
-        >
+        <button type="submit" class="registration-button">
           Зарегистрироваться
         </button>
         <p class="registration_content_text">
@@ -58,10 +38,38 @@
           >
         </p>
       </div>
+
+      <div class="registration_content" v-if="swapText">
+        <img
+          class="close_svg"
+          src="/icons/closeIcon.svg"
+          alt=""
+          @click="this.hideDialog()"
+        />
+        <p class="header_input_list">Введите код подтверждения</p>
+        <div class="input_list">
+          <input
+            class="input_list_content"
+            name="confCode"
+            type="tel"
+            inputmode="numeric"
+            v-for="item in 6"
+            :key="item"
+            @keyup="checkNum($event, item)"
+            v-model="confCode[item - 1]"
+          />
+        </div>
+      </div>
     </form>
     <form class="registration_1" v-if="swapLogin" @submit.prevent="onLogin">
       <div class="registration_content_block">
-        <div class="registration_content" @click.stop>
+        <div class="registration_content">
+          <img
+            class="close_svg"
+            src="/icons/closeIcon.svg"
+            alt=""
+            @click="this.hideDialog()"
+          />
           <input
             type="email"
             id="emailLog"
@@ -114,7 +122,9 @@ export default {
       passwordConfirmationReg: "",
       emailLog: "",
       passwordLog: "",
-      letRegister: false,
+      confCode: ["", "", "", "", "", ""],
+      swapText: false,
+      lastStr: "",
     };
   },
   props: {
@@ -124,18 +134,95 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["register", "login"]),
+    ...mapActions(["register", "login", "checkConfirmationCode"]),
     hideDialog() {
       this.$emit("update:show", false);
+      this.swapText = false;
+      this.confCode = ["", "", "", "", "", ""];
+    },
+    ctrlV(item) {
+      let confText = this.confCode[item - 1];
+
+      if (confText.length == 6) {
+        this.confCode = confText.split("");
+        this.checkConfirmationCodeFunc(this.emailReg, this.confCode.join(""));
+      } else {
+        this.confCode[item - 1] = "";
+      }
+    },
+    firstTry(str) {
+      if (this.lastStr == str) {
+        return false;
+      } else {
+        this.lastStr = str;
+        return true;
+      }
+    },
+    async checkConfirmationCodeFunc(email, code) {
+      let inputsList = document.getElementsByName("confCode");
+      var params = { email: email, code: code };
+      this.checkConfirmationCode(params)
+        .then((response) => {
+          if (response.status == 200) {
+            console.log("Круто"); // тут
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            if (error.response.status == 403) {
+              inputsList.classList.add("redBorder");
+            }
+          }
+        });
+    },
+    checkNum($event, item) {
+      let inputsList = document.getElementsByName("confCode");
+      var keyCode = $event.keyCode ? $event.keyCode : $event.which;
+
+      if (keyCode > 47 && keyCode < 58) {
+        let currentInputNum = item - 1;
+        this.confCode[item - 1] = $event.key;
+        if (this.confCode.join("").length == 6) {
+          this.checkConfirmationCodeFunc(this.emailReg, this.confCode.join(""));
+        } else {
+          if (inputsList[currentInputNum + 1]) {
+            inputsList[currentInputNum + 1].focus();
+          }
+        }
+      } else {
+        if (keyCode == 86 && $event.ctrlKey) {
+          this.ctrlV(item);
+        } else {
+          if (this.confCode[item - 1] >= 0) {
+            return;
+          } else {
+            this.confCode[item - 1] = "";
+          }
+        }
+      }
     },
     validateEmailReg() {
-      if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
-        this.onRegister;
+      let inputsList = document.getElementsByName("confCode");
+      if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(this.emailReg)) {
+        this.register({ email: this.emailReg })
+          .then((response) => {
+            if (response.status == 200) {
+              this.swapText = !this.swapText;
+            }
+          })
+          .catch((error) => {
+            if (error.response) {
+              if (error.response.status == 403) {
+                inputsList.classList.add("redBorder");
+              }
+            }
+          });
       }
     },
     validateEmailLog() {
-      if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
-        this.onLogin;
+      console.log(this.emailLog);
+      if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(this.emailLog)) {
+        this.onLogin();
       }
     },
     passwordConfirmation() {
@@ -145,48 +232,8 @@ export default {
         this.letRegister = false;
       }
     },
-    async onRegister() {
-      let confirmationText = document.getElementById("confirmationText");
-      let confirmationInput = document.getElementsByName("password");
-      let emailInput = document.getElementById("emailReg");
-      let emailCheckText = document.getElementById("emailCheck");
 
-      let email = this.emailReg;
-      let password = this.passwordReg;
-      if (this.letRegister) {
-        confirmationText.classList.add("deleted");
-        confirmationInput[0].classList.remove("redBorder");
-        confirmationInput[1].classList.remove("redBorder");
-
-        emailInput.classList.remove("redBorder");
-        emailCheckText.classList.add("deleted");
-
-        this.register({
-          email,
-          password,
-        })
-          .then((error) => {
-            if (!error) {
-              location.reload();
-            }
-          })
-          .catch((error) => {
-            if (error.response) {
-              if (error.response.status == 403) {
-                emailInput.classList.add("redBorder");
-                emailCheckText.classList.remove("deleted");
-              }
-            }
-          });
-      } else {
-        confirmationText.classList.remove("deleted");
-        confirmationInput[0].classList.add("redBorder");
-        confirmationInput[1].classList.add("redBorder");
-        emailInput.classList.remove("redBorder");
-        emailCheckText.classList.add("deleted");
-      }
-    },
-    onLogin() {
+    async onLogin() {
       let email = this.emailLog;
       let password = this.passwordLog;
 
@@ -219,6 +266,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.header_input_list {
+  line-height: 22px;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 20px 0;
+}
+.input_list {
+  display: flex;
+  justify-content: space-between;
+
+  input {
+    margin: 0 0 20px 0;
+    height: 60px;
+    width: 40px;
+    border-radius: 15px;
+    padding: 15px;
+  }
+}
+.close_svg {
+  position: absolute;
+  right: 5%;
+  top: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.close_svg:hover {
+  transform: scale(115%);
+}
 .registration_confirm_email {
   margin-top: 5px;
   font-weight: 400;
@@ -243,6 +318,7 @@ input {
   color: #5d5d5d;
 }
 .registration_content_block {
+  position: relative;
   background-color: #fff;
   border-radius: 30px;
 }
@@ -275,8 +351,8 @@ input {
 .registration_content {
   display: flex;
   flex-direction: column;
-  width: 400px;
-  padding: 50px;
+  width: 440px;
+  padding: 100px 60px;
 }
 .registration {
   display: flex;
@@ -290,6 +366,7 @@ input {
   background: rgb(0, 0, 0, 0.5);
   position: fixed;
   z-index: 10000;
+  backdrop-filter: blur(4px);
 }
 .deleted {
   display: none;

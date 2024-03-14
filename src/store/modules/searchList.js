@@ -30,7 +30,7 @@ export default {
   },
   actions: {
     async getPopularItemsRequest() {
-      const result = await axios.get("http://localhost:7000/api/v1/catalog");
+      const result = await axios.get("http:/5.35.84.50:8080/api/v1/catalog");
       const listOfPopularItems = result.data;
 
       store.commit("changePopularItemsList", listOfPopularItems);
@@ -43,7 +43,7 @@ export default {
       };
       const result = await axios
         .post(
-          `http://localhost:7000/api/v1/basket/send-email`,
+          `http://5.35.84.50:8080/api/v1/basket/send-email`,
           { ...params, price, basketDTO },
           { headers: headers }
         )
@@ -53,7 +53,7 @@ export default {
       return result;
     },
     async getAllItemsRequest() {
-      const result = await axios.get("http://localhost:7000/api/v1/catalog");
+      const result = await axios.get("http://5.35.84.50:8080/api/v1/catalog");
 
       const listOfAllItems = result.data;
 
@@ -67,7 +67,7 @@ export default {
       };
 
       const result = await axios
-        .post("http://localhost:7000/api/v1", params, {
+        .post("http://5.35.84.50:8080/api/v1", params, {
           headers: headers,
         })
         .catch((error) => {

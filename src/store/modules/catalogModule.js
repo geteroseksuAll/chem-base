@@ -36,14 +36,14 @@ export default {
   actions: {
     async getSubCategoriesListRequest(context, { name }) {
       const result = await axios.get(
-        `http://localhost:7000/api/v1/catalog/categories/${name}/subcategories`
+        `http://5.35.84.50:8080/api/v1/catalog/categories/${name}/subcategories`
       );
       store.commit("changeSubCategoriesList", result.data);
       return result;
     },
     async getCategoriesListRequest() {
       const result = await axios.get(
-        `http://localhost:7000/api/v1/catalog/categories`
+        `http://5.35.84.50:8080/api/v1/catalog/categories`
       );
       store.commit("changeCategoriesList", result.data);
       return result;
@@ -54,14 +54,14 @@ export default {
 
     async getSubSubCategoriesListRequest(context, { name }) {
       const result = await axios.get(
-        `http://localhost:7000/api/v1/catalog/find-by-subcategory-name/${name}`
+        `http://5.35.84.50:8080/api/v1/catalog/find-by-subcategory-name/${name}`
       );
       store.commit("changeSubSubCategoriesList", result.data);
       return result;
     },
     async getProductsListRequest(context, { name }) {
       const result = await axios.get(
-        `http://localhost:7000/api/v1/catalog/find-by-subsubcategory-name/${name}/products`
+        `http://5.35.84.50:8080/api/v1/catalog/find-by-subsubcategory-name/${name}/products`
       );
       store.commit("changeProductsList", result.data);
       return result;
