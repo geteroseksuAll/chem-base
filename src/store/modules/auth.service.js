@@ -42,12 +42,30 @@ export default {
       }
     },
     async register({ commit }, params) {
-      console.log(1);
       try {
         commit("auth_request");
         const response = await axios.post(
           "http://5.35.84.50:8080/api/v1/auth/registration-send-email",
           params
+        );
+        const token = response.data.token;
+        const userData = response.data.user;
+        localStorage.setItem("token", token);
+
+        commit("auth_success", token, userData);
+        return response;
+      } catch (error) {
+        commit("auth_error", error);
+        localStorage.removeItem("token");
+        throw error;
+      }
+    },
+    async registration({ commit }, { params }) {
+      try {
+        commit("auth_request");
+        const response = await axios.post(
+          "http://5.35.84.50:8080/api/v1/auth/registration",
+          { ...params }
         );
         return response;
       } catch (error) {

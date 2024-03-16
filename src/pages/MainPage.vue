@@ -51,7 +51,6 @@
             <p class="second-section_middle__button-text">Выйти из аккаунта</p>
           </button>
           <RegistrationMenu v-model:show="dialogVisible" />
-          <RegistrationDataMenu v />
         </div>
         <div class="second-section_bottom">
           <p class="second-section_bottom__text"></p>
@@ -63,7 +62,6 @@
 
 <script>
 import RegistrationMenu from "@/components/RegistrationMenu.vue";
-import RegistrationDataMenu from "@/components/RegistrationDataMenu.vue";
 import { mapActions } from "vuex";
 import {
   FirstBlockSvg,
@@ -74,12 +72,11 @@ import {
 export default {
   name: "HeaderSection",
   data() {
-    return { dialogVisible: false };
+    return { dialogVisible: false, registrationDataVisible: false };
   },
   components: {
     FirstBlockSvg,
     SecondBlockLeftSvg,
-    RegistrationDataMenu,
     SecondSectionBlockRightSvg,
     SecondSectionBlockLeftSvg,
     RegistrationMenu,

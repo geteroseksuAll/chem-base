@@ -19,7 +19,7 @@ export default {
       const headers = {
         Authorization: localStorage.getItem("token"),
       };
-      const result = await axios.get("http://localhost:7000/api/v1/basket", {
+      const result = await axios.get("http://5.35.84.50:8080/api/v1/basket", {
         headers: headers,
       });
       const allItems = result.data;
@@ -32,7 +32,7 @@ export default {
       const headers = {
         Authorization: localStorage.getItem("token"),
       };
-      const result = await axios.delete(`http://localhost:7000/api/v1/basket`, {
+      const result = await axios.delete(`http://5.35.84.50:8080/api/v1/basket`, {
         headers: headers,
         params,
       });
@@ -45,7 +45,7 @@ export default {
         Authorization: localStorage.getItem("token"),
       };
       const result = await axios.get(
-        `http://localhost:7000/api/v1/catalog/${id}/add-to-cart`,
+        `http://5.35.84.50:8080/api/v1/catalog/${id}/add-to-cart`,
         {
           headers: headers,
         }
@@ -62,7 +62,7 @@ export default {
         count: count,
       };
       const result = await axios.patch(
-        `http://localhost:7000/api/v1/basket`,
+        `http://5.35.84.50:8080/api/v1/basket`,
         params,
         {
           headers: headers,
@@ -80,7 +80,7 @@ export default {
         units: units,
       };
       const result = await axios.patch(
-        `http://localhost:7000/api/v1/basket`,
+        `http://5.35.84.50:8080/api/v1/basket`,
         params,
         {
           headers: headers,

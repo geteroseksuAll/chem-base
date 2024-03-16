@@ -3,7 +3,7 @@
     <form
       class="registration_content_block"
       @submit.prevent="validateEmailReg"
-      v-if="!swapLogin"
+      v-if="!swapLogin && !swapMenu"
     >
       <div class="registration_content" v-if="!swapText">
         <img
@@ -107,16 +107,23 @@
         </div>
       </div>
     </form>
+    <RegistrationDataMenu
+      v-model:showReg="swapMenu"
+      :emailRegistration="emailReg"
+    />
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import RegistrationDataMenu from "@/components/RegistrationDataMenu.vue";
+
 export default {
   name: "RegistrationMenu",
   data() {
     return {
       swapLogin: false,
+      swapMenu: false,
       emailReg: "",
       passwordReg: "",
       passwordConfirmationReg: "",
@@ -127,6 +134,7 @@ export default {
       lastStr: "",
     };
   },
+  components: { RegistrationDataMenu },
   props: {
     show: {
       type: Boolean,
@@ -135,6 +143,9 @@ export default {
   },
   methods: {
     ...mapActions(["register", "login", "checkConfirmationCode"]),
+    openRegistration() {
+      this.dialogVisible = true;
+    },
     hideDialog() {
       this.$emit("update:show", false);
       this.swapText = false;
@@ -164,7 +175,8 @@ export default {
       this.checkConfirmationCode(params)
         .then((response) => {
           if (response.status == 200) {
-            console.log("Круто"); // тут
+            this.swapMenu = true;
+            console.log(this.swapMenu);
           }
         })
         .catch((error) => {

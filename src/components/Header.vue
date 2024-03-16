@@ -8,14 +8,15 @@
         <div class="header-options">
           <HeaderOptions />
         </div>
-        <router-link
-          class="router_link_to_catalog"
-          :to="{ name: 'catalogSearch' }"
-        >
-          <div class="catalog_link_section">
+
+        <div class="catalog_link_section">
+          <router-link
+            class="router_link_to_catalog"
+            :to="{ name: 'catalogSearch' }"
+          >
             <p class="catalog_link_section_text">Каталог</p>
-          </div>
-        </router-link>
+          </router-link>
+        </div>
       </div>
       <div class="input-section">
         <input

@@ -1,64 +1,149 @@
 <template>
-  <div class="registration">
-    <form class="registration_content_block" @submit.prevent="validateEmailReg">
-      <div class="registration_content">
-        <img
-          class="close_svg"
-          src="/icons/closeIcon.svg"
-          alt=""
-          @click="this.hideDialog()"
-        />
+  <form
+    class="registration_content_block"
+    @submit.prevent="validateEmailReg"
+    v-if="showReg"
+  >
+    <div class="registration_content">
+      <p class="registration_header">Введите данные для регистрации</p>
+      <img
+        class="close_svg"
+        src="/icons/closeIcon.svg"
+        alt=""
+        @click="this.hideDialog()"
+      />
+      <div class="inputs_list">
         <input
-          type="email"
-          placeholder="Введите email"
+          type="name"
           name="email"
           id="emailReg"
+          :placeholder="this.$props.emailRegistration"
           class="input_registration"
+          disabled="disabled"
           v-model="emailReg"
           required
           autofocus
         />
-        <p class="registration_confirm_email deleted" id="emailCheck">
-          Пользователь с таким логином существует
-        </p>
-        <p class="registration_confirm_text deleted" id="confirmationText">
-          Пароли не совпадают
-        </p>
-        <button
-          type="submit"
-          class="registration-button"
-          @click="validateEmailReg"
-        >
-          Зарегистрироваться
-        </button>
+        <input
+          type="name"
+          placeholder="Ваше имя"
+          name="email"
+          class="input_registration"
+          v-model="name"
+          required
+          autofocus
+        />
+        <input
+          type="name"
+          placeholder="Ваша фамилия"
+          name="email"
+          class="input_registration"
+          v-model="surname"
+          required
+          autofocus
+        />
+        <input
+          type="password"
+          placeholder="Введите пароль"
+          name="passwordReg"
+          autocomplete="off"
+          class="input_registration"
+          v-model="password"
+          required
+          autofocus
+        />
+        <input
+          v-model="passwordConfirmation"
+          type="password"
+          placeholder="Подтвердите пароль"
+          name="passwordReg"
+          class="input_registration"
+          required
+          @input="validatePasswordReg"
+          autofocus
+        />
       </div>
-    </form>
-  </div>
+      <p class="registration_confirm_text deleted" id="confirmationText">
+        Пароли не совпадают
+      </p>
+      <button type="submit" class="registration-button" @click="onRegistration">
+        Зарегистрироваться
+      </button>
+    </div>
+  </form>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   props: {
-    show: {
+    showReg: {
       type: Boolean,
       default: false,
     },
+    emailRegistration: { type: String, default: "" },
   },
+  data: () => ({
+    emailReg: "",
+    passwordConfirmation: "",
+    password: "",
+    surname: "",
+    letRegister: false,
+    name: "",
+  }),
   name: "RegistrationDataMenu",
   methods: {
+    ...mapActions(["registration"]),
+    setEmailReg() {
+      this.emailReg = this.$props.emailRegistration;
+    },
+
     hideDialog() {
       this.$emit("update:showReg", false);
     },
-    validateEmailReg() {
-      if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(this.emailReg)) {
-        console.log("ok");
+    validatePasswordReg() {
+      let passwordInputs = document.getElementsByName("passwordReg");
+      let confText = document.getElementById("confirmationText");
+
+      if (this.passwordConfirmation == this.password) {
+        this.letRegister = true;
+        confText.classList.add("deleted");
+        passwordInputs[0].classList.remove("redBorder");
+        passwordInputs[1].classList.remove("redBorder");
+      } else {
+        this.letRegister = false;
+        confText.classList.remove("deleted");
+        passwordInputs[0].classList.add("redBorder");
+        passwordInputs[1].classList.add("redBorder");
       }
     },
+    onRegistration() {
+      let params = {
+        fullName: this.name + " " + this.surname,
+        email: this.$props.emailRegistration,
+        password: this.password,
+      };
+      this.registration({ params }).then((response) => {
+        if (response.status == 200) {
+          location.reload();
+        }
+      });
+    },
+  },
+  mounted() {
+    this.setEmailReg();
+    console.log(this.emailReg);
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.inputs_list {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
 .registration_content_block {
   position: relative;
   background-color: #fff;
@@ -87,6 +172,7 @@ input {
   outline: none;
 }
 .input_registration {
+  width: 100%;
   margin-top: 30px;
   background: #fff;
 }

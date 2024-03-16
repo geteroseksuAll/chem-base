@@ -33,14 +33,7 @@
           :key="item.id"
           style="text-decoration: none; color: inherit"
           :to="{
-            path:
-              '/catalog/' +
-              item.name
-                .toLowerCase()
-                .replaceAll(' & ', '-')
-                .replaceAll(' ', '-')
-                .replaceAll(',', '') +
-              '/products',
+            path: '/catalog/' + item.commandName + '/products',
           }"
           ><div class="item_image"><img src="/icons/mockupIcon.png" /></div>
           <div class="item_name">{{ item.russianName }}</div>
