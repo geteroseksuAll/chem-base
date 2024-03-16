@@ -27,7 +27,7 @@ export default {
       try {
         commit("auth_request");
         const response = await axios.post(
-          "http://5.35.84.50:8080/api/v1/auth/login",
+          "https://kimix.space:80/api/v1/auth/login",
           params
         );
         const token = response.data.token;
@@ -45,7 +45,7 @@ export default {
       try {
         commit("auth_request");
         const response = await axios.post(
-          "http://5.35.84.50:8080/api/v1/auth/registration-send-email",
+          "https://kimix.space:80/api/v1/auth/registration-send-email",
           params
         );
         const token = response.data.token;
@@ -64,7 +64,7 @@ export default {
       try {
         commit("auth_request");
         const response = await axios.post(
-          "http://5.35.84.50:8080/api/v1/auth/registration",
+          "https://kimix.space:80/api/v1/auth/registration",
           { ...params }
         );
         return response;
@@ -77,7 +77,7 @@ export default {
       try {
         commit("auth_request");
         const response = await axios.post(
-          "http://5.35.84.50:8080/api/v1/auth/registration-check-code",
+          "https://kimix.space:80/api/v1/auth/registration-check-code",
           params
         );
         return response;
