@@ -13,7 +13,6 @@
           @click="this.hideDialog()"
         />
         <input
-          type="email"
           placeholder="Введите email"
           name="email"
           id="emailReg"
@@ -46,7 +45,7 @@
           alt=""
           @click="this.hideDialog()"
         />
-        <p class="header_input_list">Введите код подтверждения</p>
+        <p class="header_input_list">Вам на почту выслан код подтверждения</p>
         <div class="input_list">
           <input
             class="input_list_content"
@@ -171,7 +170,7 @@ export default {
     },
     async checkConfirmationCodeFunc(email, code) {
       let inputsList = document.getElementsByName("confCode");
-      var params = { email: email, code: code };
+      var params = { phoneEmail: email, code: code };
       this.checkConfirmationCode(params)
         .then((response) => {
           if (response.status == 200) {
@@ -182,7 +181,7 @@ export default {
         .catch((error) => {
           if (error.response) {
             if (error.response.status == 403) {
-              inputsList.classList.add("redBorder");
+              inputsList.forEach().classList.add("redBorder");
             }
           }
         });
@@ -215,8 +214,8 @@ export default {
     },
     validateEmailReg() {
       let inputsList = document.getElementsByName("confCode");
-      if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(this.emailReg)) {
-        this.register({ email: this.emailReg })
+      if (inputsList) {
+        this.register({ phoneEmail: this.emailReg })
           .then((response) => {
             if (response.status == 200) {
               this.swapText = !this.swapText;
@@ -233,7 +232,7 @@ export default {
     },
     validateEmailLog() {
       console.log(this.emailLog);
-      if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(this.emailLog)) {
+      if (this.emailLog) {
         this.onLogin();
       }
     },

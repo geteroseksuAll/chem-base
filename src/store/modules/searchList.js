@@ -30,7 +30,7 @@ export default {
   },
   actions: {
     async getPopularItemsRequest() {
-      const result = await axios.get("https://kimix.space:80/api/v1/catalog");
+      const result = await axios.get("https://82.97.240.195:80/api/v1/catalog");
       const listOfPopularItems = result.data;
 
       store.commit("changePopularItemsList", listOfPopularItems);
@@ -43,7 +43,7 @@ export default {
       };
       const result = await axios
         .post(
-          `https://kimix.space:80/api/v1/basket/send-email`,
+          `https://82.97.240.195:80/api/v1/basket/send-email`,
           { ...params, price, basketDTO },
           { headers: headers }
         )
@@ -53,7 +53,7 @@ export default {
       return result;
     },
     async getAllItemsRequest() {
-      const result = await axios.get("https://kimix.space:80/api/v1/catalog");
+      const result = await axios.get("https://82.97.240.195:80/api/v1/catalog");
 
       const listOfAllItems = result.data;
 
@@ -67,7 +67,7 @@ export default {
       };
 
       const result = await axios
-        .post("https://kimix.space:80/api/v1", params, {
+        .post("https://82.97.240.195:80/api/v1", params, {
           headers: headers,
         })
         .catch((error) => {

@@ -12,17 +12,28 @@
           </button></router-link
         >
       </div>
+      <div class="item_list_main-category">
+        {{
+          this.$store.getters.getProductsList[0]?.subsubcategoryDTO.russianName
+        }}
+      </div>
       <div class="items_list_block">
         <div class="items_list">
-          <div
+          <router-link
+            style="color: inherit; text-decoration: none"
             class="item"
             v-for="item in this.$store.getters.getProductsList"
             :key="item.id"
+            :to="'/catalog/product/' + item.id"
           >
-            <router-link :to="'/catalog/' + item.id">{{
-              this.$store.getters.getProductsList
-            }}</router-link>
-          </div>
+            <img v-if="item.image" :src="item.image" class="item_image" />
+            <img v-else src="/icons/mockupIcon.png" class="item_image" />
+            <div class="item_info">
+              <div class="item_name">{{ item?.commonName }}</div>
+              <div class="item_cas">{{ item?.casNumbers.join() }}</div>
+              <div class="item_description">{{ item?.description }}</div>
+            </div>
+          </router-link>
         </div>
       </div>
     </div>
@@ -51,6 +62,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.item {
+  display: flex;
+  width: 23%;
+  flex-direction: column;
+  height: auto;
+}
+.item_image {
+}
+.item_list_main-category {
+  display: flex;
+  width: 100%;
+  border-top: 1px solid #cdcdcd;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 64px;
+  letter-spacing: -0.02em;
+}
 .items_pointers {
   margin: 20px;
 }

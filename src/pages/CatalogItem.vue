@@ -20,13 +20,10 @@
                 class="item_image_block"
                 v-if="currentItem && currentItem.image"
               >
-                <div
-                  class="item_image"
-                  v-html="deleteAllBackSlashesMain(currentItem.image)"
-                ></div>
+                <img class="item_image" :src="currentItem.image" />
               </div>
               <div class="item_image_block" v-else>
-                <div class="item_image">Фото не доступно</div>
+                <img class="item_image" src="/icons/mockupIcon.png" />
               </div>
               <ul class="item-info_list">
                 <li
@@ -82,10 +79,7 @@
                     v-if="item"
                     :to="{ path: '/catalog/' + item.id }"
                   >
-                    <div
-                      class="popular_item_image"
-                      v-html="deleteAllBackSlashesPopular(item.image)"
-                    ></div>
+                    <div class="popular_item_image"></div>
                     <div class="popular_item_name">
                       {{ item.commonName }}
                     </div>
@@ -388,6 +382,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.item_image_block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.item_image {
+  height: auto;
+  width: 300px;
+}
 .spec_name {
   color: #808080;
 }

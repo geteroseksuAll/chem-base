@@ -27,7 +27,7 @@
               v-if="item.productDTO?.image"
               v-html="item.productDTO?.image"
             ></div>
-            <div class="basket_item_info" v-if="item.productDTO?.image">
+            <div class="basket_item_info" v-if="item.productDTO">
               <div class="item_info_content">
                 <div class="item_text_info">
                   <p class="item_articule">
