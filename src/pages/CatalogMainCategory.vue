@@ -110,7 +110,7 @@ export default {
   font-weight: 500;
   color: #505050;
   p {
-    padding: 10px 0;
+    padding: 10px 0 10px 5px;
     transition: 0.3s;
   }
 }
@@ -162,7 +162,7 @@ export default {
   font-size: 16px;
   font-weight: 600;
   line-height: 1.375;
-  padding: 20px 0 10px 0;
+  padding: 20px 0 10px 5px;
 }
 .hovered {
   background: #f4f4f4;

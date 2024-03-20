@@ -15,6 +15,7 @@ import StatisticsSvgButton from "./icons/StatisticsSvgButton.vue";
 import HeartIcon from "./icons/HeartIcon.vue";
 import HeaderMyProfileIcon from "./icons/HeaderMyProfile.vue";
 import CloseIcon from "./icons/CloseIcon.vue";
+import MoreIconSvg from "./icons/MoreIcon.vue";
 
 export {
   CloseIcon,
@@ -29,6 +30,7 @@ export {
   HeaderHeartIcon,
   HeaderLoginIcon,
   SecondSectionBlockLeftSvg,
+  MoreIconSvg,
   CatalogItemPropertiesSvg,
   CopySvgButton,
   StatisticsSvgButton,

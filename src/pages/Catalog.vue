@@ -296,7 +296,7 @@ export default {
   width: 70%;
   border-left: 1px solid #cdcdcd;
   background: #f7f7f7;
-  max-height: 1200px;
+  max-height: 1300px;
 }
 .catalog_block_content_search {
   border-top: #cdcdcd 1px solid;

@@ -66,27 +66,25 @@
                 <li class="item-info_text">ОТЗЫВЫ <HeaderLangButton /></li>
               </ul>
             </div>
-            <div class="popular_items_block">
-              <div class="popular_items_title">ЧАСТО ПОКУПАЮТ</div>
-              <ul class="popular_items_list">
-                <li v-for="item in this.popularItemsArray" :key="item.id">
-                  <router-link
-                    style="
-                      text-decoration: none;
-                      color: inherit;
-                      text-align: center;
-                    "
-                    v-if="item"
-                    :to="{ path: '/catalog/' + item.id }"
-                  >
-                    <div class="popular_item_image"></div>
-                    <div class="popular_item_name">
-                      {{ item.commonName }}
-                    </div>
-                  </router-link>
-                </li>
-              </ul>
-            </div>
+            <!-- <div class="popular_items_block"> -->
+            <!-- <div class="popular_items_title">ЧАСТО ПОКУПАЮТ</div> -->
+            <!-- <ul class="popular_items_list"> -->
+            <!-- <li v-for="item in this.popularItemsArray" :key="item.id"> -->
+            <!-- <router-link -->
+            <!-- style=" -->
+            <!-- /* text-decoration: none; */ /* color: inherit; */ /* text-align:
+            center; */ /* " */ -->
+            <!-- v-if="item" -->
+            <!-- :to="{ path: '/catalog/' + item.id }" -->
+            <!-- > -->
+            <!-- <div class="popular_item_image"></div> -->
+            <!-- <div class="popular_item_name"> -->
+            <!-- {{ item.commonName }} -->
+            <!-- </div> -->
+            <!-- </router-link> -->
+            <!-- </li> -->
+            <!-- </ul> -->
+            <!-- </div> -->
           </div>
           <div class="item-main_price_block">
             <div class="item-main_price_menu">
@@ -110,23 +108,23 @@
                 </div>
               </div>
               <div class="item_cas item_text">
-                <div class="name_info_top_items">
-                  <p class="name_info_text">ФОРМУЛА</p>
-                  <div class="top_item_info_svg">
-                    <CatalogItemPropertiesSvg />
-                  </div>
-                </div>
-                <div class="name_info_description" v-if="currentItem?.formula">
-                  <div v-html="clearFormula(currentItem?.formula)"></div>
-                </div>
-                <div class="name_info_bottom_items">
-                  <div class="bottom_item_info_svg">
-                    <CatalogItemPropertiesSvg />
-                  </div>
-                  <!-- <div class="copy_button_svg">
+                <!-- <div class="name_info_top_items"> -->
+                <!-- <p class="name_info_text">ФОРМУЛА</p> -->
+                <!-- <div class="top_item_info_svg"> -->
+                <!-- <CatalogItemPropertiesSvg /> -->
+                <!-- </div> -->
+                <!-- </div> -->
+                <!-- <div class="name_info_description" v-if="currentItem?.formula"> -->
+                <!-- <div v-html="clearFormula(currentItem?.formula)"></div> -->
+                <!-- </div> -->
+                <!-- <div class="name_info_bottom_items"> -->
+                <!-- <div class="bottom_item_info_svg"> -->
+                <!-- <CatalogItemPropertiesSvg /> -->
+                <!-- </div> -->
+                <!-- <div class="copy_button_svg">
                     <CopySvgButton />
                   </div> -->
-                </div>
+                <!-- </div> -->
               </div>
               <div class="item_buy-menu">
                 <div class="item_buy-menu_content">
@@ -347,16 +345,9 @@ export default {
     isLoggedIn: function () {
       return this.$store.getters.isLoggedIn;
     },
-
-    popularItemsArray() {
-      const popularItemsArray = this.$store.getters?.getPopularItemsList;
-
-      return popularItemsArray?.slice(0, 4);
-    },
   },
   mounted() {
-    this.getPopularItemsRequest();
-    this.getAllItemsRequest();
+    this.getAllItemsRequest(); //заменить
     if (this.isLoggedIn) {
       this.getBasketAllItemsRequest();
     }

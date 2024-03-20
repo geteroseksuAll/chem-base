@@ -39,7 +39,6 @@
           <div class="item_name">{{ item.russianName }}</div>
           <div class="item_more_button">
             <p class="more_button_text">Подробнее</p>
-            <img src="/icons/moreIcon.svg" />
           </div>
         </router-link>
       </div>
