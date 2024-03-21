@@ -7,6 +7,7 @@ export default {
     categoriesList: [],
     productsList: [],
     subSubCategoriesList: [],
+    currentItem: [],
     productRequestValue: "",
   },
   getters: {
@@ -15,6 +16,7 @@ export default {
     getSubCategoriesList: ({ subCategoriesList }) => subCategoriesList,
     getProductRequestValue: ({ productRequestValue }) => productRequestValue,
     getSubSubCategoriesList: ({ subSubCategoriesList }) => subSubCategoriesList,
+    getCurrentItem: ({ currentItem }) => currentItem,
   },
   mutations: {
     changeCategoriesList(state, data) {
@@ -32,8 +34,18 @@ export default {
     changeSubSubCategoriesList(state, data) {
       state.subSubCategoriesList = data;
     },
+    changeCurrentItem(state, data) {
+      state.currentItem = data;
+    },
   },
   actions: {
+    async getCurrentItemRequest(context, id) {
+      const result = await axios.get(
+        `https://82.97.240.195:80/api/v1/catalog/${id}`
+      );
+      store.commit("changeCurrentItem", result.data);
+      return result;
+    },
     async getSubCategoriesListRequest(context, { name }) {
       const result = await axios.get(
         `https://82.97.240.195:80/api/v1/catalog/categories/${name}/subcategories`

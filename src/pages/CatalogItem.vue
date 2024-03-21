@@ -56,7 +56,22 @@
                     </div>
                   </div>
                 </Transition>
-                <li class="item-info_text">ОПИСАНИЕ <HeaderLangButton /></li>
+
+                <li
+                  class="item-info_text"
+                  :class="{ active: showDescr }"
+                  @click="showDescr = !showDescr"
+                >
+                  ОПИСАНИЕ
+                  <HeaderLangButton :class="{ activeImg: showDescr }" />
+                </li>
+                <Transition name="slide-fade">
+                  <div class="spec_item" v-if="showDescr">
+                    <p class="spec_description">
+                      {{ currentItem.description }}
+                    </p>
+                  </div>
+                </Transition>
                 <li class="item-info_text">
                   ДОСТАВКА И ОПЛАТА <HeaderLangButton />
                 </li>
@@ -96,7 +111,7 @@
                   </div>
                 </div>
                 <p class="name_info_description">
-                  {{ currentItem?.casNumbers.join(" ") }}
+                  {{ currentItem.casNumbers?.join(" ") }}
                 </p>
                 <div class="name_info_bottom_items">
                   <div class="bottom_item_info_svg">
@@ -216,6 +231,7 @@ export default {
     const dialogVisible = false;
     const showSpec = false;
     const intoCart = false;
+    const showDescr = false;
 
     const types = {
       aLotOfItems: {
@@ -251,6 +267,7 @@ export default {
       dialogVisible,
       showSpec,
       intoCart,
+      showDescr,
     };
   },
   methods: {
@@ -259,6 +276,7 @@ export default {
       "setItemToCart",
       "getPopularItemsRequest",
       "getBasketAllItemsRequest",
+      "getCurrentItemRequest",
     ]),
 
     openRegistration() {
@@ -325,9 +343,8 @@ export default {
 
   computed: {
     currentItem() {
-      const currentItem = this.$store.getters.getAllItemsList?.find(
-        (item) => item.id == this.$route.params.id
-      );
+      const currentItem = this.$store.getters.getCurrentItem;
+      console.log(this.$store.getters.getCurrentItem);
       return currentItem;
     },
 
@@ -347,7 +364,7 @@ export default {
     },
   },
   mounted() {
-    this.getAllItemsRequest(); //заменить
+    this.getCurrentItemRequest(this.$route.params.id);
     if (this.isLoggedIn) {
       this.getBasketAllItemsRequest();
     }

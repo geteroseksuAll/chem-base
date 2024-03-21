@@ -6,6 +6,7 @@ import BasketPage from "@/pages/Basket.vue";
 import CatalogSubCategoriesBlock from "@/pages/CatalogSubCategories";
 import CatalogItems from "@/pages/CatalogItems.vue";
 import CatalogMainCategoryBlock from "@/pages/CatalogMainCategory";
+import UserProfile from "@/pages/UserProfile.vue";
 
 const routes = [
   {
@@ -37,6 +38,11 @@ const routes = [
     path: "/catalog/product/:id",
     name: "catalogItem",
     component: CatalogItem,
+  },
+  {
+    path: "/user-profile",
+    name: "myCabinet",
+    component: UserProfile,
   },
 
   {

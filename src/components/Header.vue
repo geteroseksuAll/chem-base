@@ -51,7 +51,9 @@
           @click="openRegistration"
           style="cursor: pointer"
         />
-        <HeaderMyProfileIcon v-else style="cursor: pointer" />
+        <router-link v-else to="/user-profile">
+          <HeaderMyProfileIcon style="cursor: pointer" />
+        </router-link>
         <HeaderHeartIcon />
         <HeaderBasketIcon
           style="cursor: pointer"
