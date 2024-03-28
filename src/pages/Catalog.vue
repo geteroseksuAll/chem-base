@@ -193,7 +193,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.$store.getters.getSubCategoriesList);
     this.$store.state.searchList = [];
     var previousText = document.getElementById("maintext");
     var futureText = document.getElementById("subtext");
@@ -278,6 +277,7 @@ export default {
   margin: 3---0px;
 }
 .main_category_name {
+  max-width: 700px;
   margin: 30px 50px 30px 30px;
   font-size: 36px;
   font-weight: 700;

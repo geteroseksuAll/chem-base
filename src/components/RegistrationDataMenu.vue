@@ -133,7 +133,6 @@ export default {
   },
   mounted() {
     this.setEmailReg();
-    console.log(this.emailReg);
   },
 };
 </script>

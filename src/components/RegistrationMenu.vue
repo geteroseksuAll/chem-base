@@ -175,7 +175,6 @@ export default {
         .then((response) => {
           if (response.status == 200) {
             this.swapMenu = true;
-            console.log(this.swapMenu);
           }
         })
         .catch((error) => {
@@ -231,7 +230,6 @@ export default {
       }
     },
     validateEmailLog() {
-      console.log(this.emailLog);
       if (this.emailLog) {
         this.onLogin();
       }

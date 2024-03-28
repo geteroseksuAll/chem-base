@@ -69,7 +69,6 @@ export default {
 
   mounted() {
     this.getSubSub();
-    console.log(this.$route.params);
   },
 };
 </script>

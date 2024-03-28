@@ -92,7 +92,6 @@ export default {
 
   mounted() {
     this.getItems();
-    console.log(this.showDescription);
   },
 };
 </script>

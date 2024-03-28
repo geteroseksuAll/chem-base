@@ -344,7 +344,6 @@ export default {
   computed: {
     currentItem() {
       const currentItem = this.$store.getters.getCurrentItem;
-      console.log(this.$store.getters.getCurrentItem);
       return currentItem;
     },
 

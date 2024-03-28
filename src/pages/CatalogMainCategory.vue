@@ -90,7 +90,6 @@ export default {
 
   mounted() {
     this.getSubSub();
-    console.log(this.mainCategoryName);
   },
 };
 </script>

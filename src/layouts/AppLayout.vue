@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <Header />
-    <router-view />
+    <Header style="position: fixed; width: 100%; z-index: 10000" />
+    <router-view style="padding: 110px 0 0 0" />
     <Footer />
   </div>
 </template>
@@ -14,4 +14,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@media screen and (min-width: 1440px) {
+  router-view {
+    padding: 90px 0 0 0;
+  }
+}
+</style>
