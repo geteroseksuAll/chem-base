@@ -257,6 +257,7 @@ export default {
       this.firstName = userInfo.firstName;
       this.userJobTitle = userInfo.jobPosition;
       this.marketCategoryName = userInfo.categoryDTO?.name;
+      this.marketCategoryId = userInfo.categoryDTO?.id;
     }
   },
 };
