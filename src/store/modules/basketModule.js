@@ -19,9 +19,12 @@ export default {
       const headers = {
         Authorization: localStorage.getItem("token"),
       };
-      const result = await axios.get("https://82.97.240.195:80/api/v1/basket", {
-        headers: headers,
-      });
+      const result = await axios.get(
+        `https://backend.kimix.space/api/v1/basket`,
+        {
+          headers: headers,
+        }
+      );
       const allItems = result.data;
       store.commit("changeBasketAllItems", allItems);
       return allItems;
@@ -33,7 +36,7 @@ export default {
         Authorization: localStorage.getItem("token"),
       };
       const result = await axios.delete(
-        `https://82.97.240.195:80/api/v1/basket`,
+        `https://backend.kimix.space/api/v1/basket`,
         {
           headers: headers,
           params,
@@ -48,7 +51,7 @@ export default {
         Authorization: localStorage.getItem("token"),
       };
       const result = await axios.get(
-        `https://82.97.240.195:80/api/v1/catalog/${id}/add-to-cart`,
+        `https://backend.kimix.space/api/v1/catalog/${id}/add-to-cart`,
         {
           headers: headers,
         }
@@ -65,7 +68,7 @@ export default {
         count: count,
       };
       const result = await axios.patch(
-        `https://82.97.240.195:80/api/v1/basket`,
+        `https://backend.kimix.space/api/v1/basket`,
         params,
         {
           headers: headers,
@@ -83,7 +86,7 @@ export default {
         units: units,
       };
       const result = await axios.patch(
-        `https://82.97.240.195:80/api/v1/basket`,
+        `https://backend.kimix.space/api/v1/basket`,
         params,
         {
           headers: headers,

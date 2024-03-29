@@ -2,11 +2,17 @@ import axios from "axios";
 import store from "..";
 
 export default {
-  state: { userInfo: [] },
-  getters: { getUserInfo: ({ userInfo }) => userInfo },
+  state: { userInfo: [], userPasswordStatus: "" },
+  getters: {
+    getUserInfo: ({ userInfo }) => userInfo,
+    getPasswordStatus: ({ userPasswordStatus }) => userPasswordStatus,
+  },
   mutations: {
     changeUserInfo(state, data) {
       state.userInfo = data;
+    },
+    changePasswordStatus(state, data) {
+      state.userPasswordStatus = data;
     },
   },
   actions: {
@@ -26,10 +32,21 @@ export default {
         Authorization: localStorage.getItem("token"),
       };
       const result = await axios.patch(
-        `https://82.97.240.195:80/api/v1/user-profile`,
+        `https://backend.kimix.space/api/v1/user-profile`,
         { ...params },
         { headers: headers }
       );
+      return result;
+    },
+    async getPasswordStatusRequest(context, { password, newPassword, email }) {
+      const result = await axios
+        .post(
+          `https://backend.kimix.space/api/v1/user-profile/change-password`,
+          { currentPassword: password, newPassword: newPassword, email: email }
+        )
+        .catch((error) => {
+          throw error;
+        });
       return result;
     },
     async getUserInfoRequest() {
@@ -37,7 +54,7 @@ export default {
         Authorization: localStorage.getItem("token"),
       };
       const result = await axios.get(
-        "https://82.97.240.195:80/api/v1/user-profile",
+        "https://backend.kimix.space/api/v1/user-profile",
         {
           headers: headers,
         }

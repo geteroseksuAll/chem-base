@@ -100,6 +100,10 @@
                 class="select_block"
                 @click="categorySelect = !categorySelect"
               >
+                <MoreIconSvg
+                  :class="{ rotate: categorySelect }"
+                  @click="categorySelect = !categorySelect"
+                />
                 <span class="input_placeholder">Категория ваших продуктов</span>
                 <span>{{ marketCategoryRus }}</span>
               </div>
@@ -127,11 +131,95 @@
                 v-bind="bindProps"
                 v-model="phone"
                 @validate="phoneObject"
+                ref="numberInput"
               ></vue-tel-input>
+              <button class="save_button" type="button" @click="saveMethod">
+                Сохранить
+              </button>
             </div>
-            <button class="save_button" type="button" @click="saveMethod">
-              Сохранить
-            </button>
+            <div class="reset_menu">
+              <div class="reset_menu_header">Восстановление пароля</div>
+              <div class="input_info">
+                <input
+                  class="info_input"
+                  type="password"
+                  v-model="currentPassword"
+                  ref="currentPassword"
+                /><span class="input_placeholder">Ваш нынешний пароль </span>
+                <ShowSvg
+                  @click="
+                    showCurrent = !showCurrent;
+                    this.$refs.currentPassword.type = 'text';
+                  "
+                  v-if="!showCurrent"
+                />
+                <EyeSvg
+                  v-else
+                  @click="
+                    showCurrent = !showCurrent;
+                    this.$refs.currentPassword.type = 'password';
+                  "
+                />
+              </div>
+              <div class="input_info">
+                <input
+                  class="info_input"
+                  type="password"
+                  v-model="newPassword"
+                  ref="newPassword"
+                  @input="newPasswordCheck"
+                /><span class="input_placeholder">Ваш новый пароль </span>
+                <ShowSvg
+                  @click="
+                    showNew = !showNew;
+                    this.$refs.newPassword.type = 'text';
+                  "
+                  v-if="!showNew"
+                />
+                <EyeSvg
+                  v-else
+                  @click="
+                    showNew = !showNew;
+                    this.$refs.newPassword.type = 'password';
+                  "
+                />
+              </div>
+              <div class="settings_block">
+                <div class="setting_item">
+                  <span
+                    class="confirmation_text"
+                    :class="{ confirmed: this.lenConfirmed }"
+                    ><WarningSvg v-if="!lenConfirmed" /><ConfirmIcon v-else />
+                    Длина пароля больше 8 символов
+                  </span>
+                </div>
+                <div class="setting_item">
+                  <span
+                    class="confirmation_text"
+                    :class="{ confirmed: this.numConfirmed }"
+                    ><WarningSvg v-if="!numConfirmed" /><ConfirmIcon v-else />
+                    Содержит минимум 1 цифру
+                  </span>
+                </div>
+                <div class="setting_item">
+                  <span
+                    class="confirmation_text"
+                    :class="{ confirmed: this.upperLowerConfirmed }"
+                    ><WarningSvg v-if="!upperLowerConfirmed" /><ConfirmIcon
+                      v-else
+                    />
+                    Содержит заглавные и строчные буквы
+                  </span>
+                </div>
+                <button
+                  class="save_button"
+                  type="button"
+                  @click="recoverPassword"
+                >
+                  Восстановить
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -142,7 +230,13 @@
 <script>
 import { VueTelInput } from "vue-tel-input";
 import { mapActions } from "vuex";
-import { MoreIconSvg } from "@/components/UI";
+import {
+  MoreIconSvg,
+  WarningSvg,
+  ConfirmIcon,
+  ShowSvg,
+  EyeSvg,
+} from "@/components/UI";
 import "vue-tel-input/vue-tel-input.css";
 export default {
   name: "UserProfile",
@@ -160,8 +254,16 @@ export default {
     const categorySelect = false;
     const marketCategoryId = 0;
     const marketCategoryName = "";
+    const newPassword = "";
+    let lenConfirmed = false;
+    let numConfirmed = false;
+    let upperLowerConfirmed = false;
 
     return {
+      numConfirmed,
+      upperLowerConfirmed,
+      lenConfirmed,
+      newPassword,
       lastName,
       isValid: false,
       marketCategoryRus,
@@ -177,6 +279,8 @@ export default {
       categorySelect,
       marketCategoryId,
       marketCategoryName,
+      showCurrent: false,
+      showNew: false,
     };
   },
   methods: {
@@ -184,7 +288,39 @@ export default {
       "getUserInfoRequest",
       "getCategoriesListRequest",
       "setUserInfoRequest",
+      "getPasswordStatusRequest",
     ]),
+    newPasswordCheck() {
+      this.lenConfirmed = false;
+      this.numConfirmed = false;
+      this.upperLowerConfirmed = false;
+
+      let numCheck = /\d/g;
+      if (this.newPassword.length >= 8) {
+        this.lenConfirmed = true;
+      }
+      if (numCheck.test(this.newPassword)) {
+        this.numConfirmed = true;
+      }
+      if (
+        this.newPassword.toUpperCase() != this.newPassword &&
+        this.newPassword.toLowerCase() != this.newPassword
+      ) {
+        this.upperLowerConfirmed = true;
+      }
+    },
+    recoverPassword() {
+      if (this.numConfirmed && this.currentPassword != null) {
+        this.getPasswordStatusRequest({
+          password: this.currentPassword,
+          newPassword: this.newPassword,
+          email: this.userEmail,
+        }).catch((error) => {
+          this.$refs.currentPassword.classList.add("redBorder");
+          return error;
+        });
+      }
+    },
     settingsMenu() {
       this.profile = !this.profile;
       this.procurements = false;
@@ -209,7 +345,9 @@ export default {
           },
         });
       } else {
-        this.$refs.jobTitle.classList.add("redBorder");
+        if (this.isValid) {
+          this.$refs.jobTitle.classList.add("redBorder");
+        }
       }
     },
     phoneObject(object) {
@@ -237,6 +375,10 @@ export default {
   components: {
     VueTelInput,
     MoreIconSvg,
+    ConfirmIcon,
+    WarningSvg,
+    ShowSvg,
+    EyeSvg,
   },
   computed: {
     isLoggedIn: function () {
@@ -264,8 +406,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.save_button {
+.setting_item {
+  display: flex;
+  font-size: 14px;
+  span {
+    color: rgb(210 68 50);
+  }
+  .confirmed {
+    color: rgb(0 151 61);
+  }
+}
+.reset_menu_header {
+  margin: 50px 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.reset_menu {
+  display: flex;
+  flex-direction: column;
   width: 50%;
+}
+.save_button {
+  width: 100%;
   margin-top: 20px;
   padding: 15px 0;
   background: #14d8b5;
@@ -329,6 +492,19 @@ input:disabled:hover {
 input:disabled + .input_placeholder {
   opacity: 0.4;
 }
+.select_block {
+  cursor: pointer;
+  svg {
+    position: absolute;
+    right: 20px;
+    top: 40%;
+    transform: rotate(90deg);
+    transition: 0.3s;
+  }
+  .rotate {
+    transform: rotate(270deg);
+  }
+}
 .input_placeholder {
   margin: 0px;
   font-style: normal;
@@ -384,6 +560,12 @@ input:disabled + .input_placeholder {
   }
   .info_input:focus + span {
     color: #14d8b5;
+  }
+  svg {
+    position: absolute;
+    top: 40%;
+    right: 35px;
+    cursor: pointer;
   }
 }
 .user_name_logo {
@@ -501,6 +683,7 @@ input:disabled + .input_placeholder {
 .slide-fade-leave-to {
   opacity: 0;
 }
+
 .current_menu_block {
   display: flex;
   flex-direction: column;

@@ -16,12 +16,20 @@ import HeartIcon from "./icons/HeartIcon.vue";
 import HeaderMyProfileIcon from "./icons/HeaderMyProfile.vue";
 import CloseIcon from "./icons/CloseIcon.vue";
 import MoreIconSvg from "./icons/MoreIcon.vue";
+import WarningSvg from "./icons/WarningSvg.vue";
+import ConfirmIcon from "./icons/ConfirmIcon.vue";
+import EyeSvg from "./icons/EyeSvg.vue";
+import ShowSvg from "./icons/ShowSvg.vue";
 
 export {
+  ShowSvg,
+  EyeSvg,
+  ConfirmIcon,
   CloseIcon,
   HeaderLogo,
   HeaderOptions,
   FirstBlockSvg,
+  WarningSvg,
   SecondBlockLeftSvg,
   SecondSectionBlockRightSvg,
   HeaderInputButton,

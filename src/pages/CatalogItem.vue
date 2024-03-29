@@ -335,7 +335,6 @@ export default {
         if (resp.status == 200) {
           toCartButton.classList.add("changed");
           toCartButton.textContent = "В КОРЗИНЕ";
-          this.getBasketAllItemsRequest(); //? нужно ли вообще
         }
       });
     },
