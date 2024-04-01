@@ -15,13 +15,18 @@
         <input
           placeholder="Введите email"
           name="email"
+          ref="emailReg"
           id="emailReg"
           class="input_registration"
           v-model="emailReg"
           required
           autofocus
         />
-        <p class="registration_confirm_email deleted" id="emailCheck">
+        <p
+          class="registration_confirm_email deleted"
+          id="emailCheck"
+          ref="emailCheck"
+        >
           Пользователь с таким логином существует
         </p>
         <p class="registration_confirm_text deleted" id="confirmationText">
@@ -71,6 +76,7 @@
           />
           <input
             type="email"
+            ref="emailLog"
             id="emailLog"
             placeholder="Введите email"
             name="email"
@@ -82,12 +88,17 @@
             type="password"
             name="password"
             id="passwordLog"
+            ref="passwordLog"
             placeholder="Введите пароль"
             class="input_registration"
             v-model="passwordLog"
             required
           />
-          <p id="loginCheckText" class="registration_confirm_text deleted">
+          <p
+            id="loginCheckText"
+            class="registration_confirm_text deleted"
+            ref="loginCheckText"
+          >
             Неправильный логин или пароль
           </p>
           <button
@@ -170,7 +181,7 @@ export default {
     },
     async checkConfirmationCodeFunc(email, code) {
       let inputsList = document.getElementsByName("confCode");
-      var params = { phoneEmail: email, code: code };
+      var params = { email: email, code: code };
       this.checkConfirmationCode(params)
         .then((response) => {
           if (response.status == 200) {
@@ -180,7 +191,9 @@ export default {
         .catch((error) => {
           if (error.response) {
             if (error.response.status == 403) {
-              inputsList.forEach().classList.add("redBorder");
+              for (let i = 0; i < 6; i++) {
+                inputsList[i].classList.add("redBorder");
+              }
             }
           }
         });
@@ -213,8 +226,17 @@ export default {
     },
     validateEmailReg() {
       let inputsList = document.getElementsByName("confCode");
+      this.$refs.emailCheck.classList.add("deleted");
+      this.$refs.emailReg.classList.remove("redBorder");
+
+      if (this.swapText) {
+        for (let i = 0; i < 6; i++) {
+          inputsList[i].classList.remove("redBorder");
+        }
+      }
+
       if (inputsList) {
-        this.register({ phoneEmail: this.emailReg })
+        this.register({ email: this.emailReg })
           .then((response) => {
             if (response.status == 200) {
               this.swapText = !this.swapText;
@@ -223,7 +245,8 @@ export default {
           .catch((error) => {
             if (error.response) {
               if (error.response.status == 403) {
-                inputsList.classList.add("redBorder");
+                this.$refs.emailReg.classList.add("redBorder");
+                this.$refs.emailCheck.classList.remove("deleted");
               }
             }
           });

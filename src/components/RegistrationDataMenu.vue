@@ -51,7 +51,34 @@
           v-model="password"
           required
           autofocus
+          @input="newPasswordCheck"
         />
+        <div class="settings_block">
+          <div class="setting_item">
+            <span
+              class="confirmation_text"
+              :class="{ confirmed: this.lenConfirmed }"
+              ><WarningSvg v-if="!lenConfirmed" /><ConfirmIcon v-else />
+              Длина пароля больше 8 символов
+            </span>
+          </div>
+          <div class="setting_item">
+            <span
+              class="confirmation_text"
+              :class="{ confirmed: this.numConfirmed }"
+              ><WarningSvg v-if="!numConfirmed" /><ConfirmIcon v-else />
+              Содержит минимум 1 цифру
+            </span>
+          </div>
+          <div class="setting_item">
+            <span
+              class="confirmation_text"
+              :class="{ confirmed: this.upperLowerConfirmed }"
+              ><WarningSvg v-if="!upperLowerConfirmed" /><ConfirmIcon v-else />
+              Содержит заглавные и строчные буквы
+            </span>
+          </div>
+        </div>
         <input
           v-model="passwordConfirmation"
           type="password"
@@ -63,9 +90,17 @@
           autofocus
         />
       </div>
-      <p class="registration_confirm_text deleted" id="confirmationText">
-        Пароли не совпадают
-      </p>
+      <div class="settings_block">
+        <div class="setting_item">
+          <span
+            class="confirmation_text"
+            id="confirmationText"
+            :class="{ confirmed: this.confirm }"
+            ><WarningSvg v-if="!confirm" /><ConfirmIcon v-else />
+            Пароли не совпадают
+          </span>
+        </div>
+      </div>
       <button type="submit" class="registration-button" @click="onRegistration">
         Зарегистрироваться
       </button>
@@ -75,6 +110,11 @@
 
 <script>
 import { mapActions } from "vuex";
+import {
+  WarningSvg,
+  ConfirmIcon,
+  //EyeSvg
+} from "./UI";
 
 export default {
   props: {
@@ -84,6 +124,11 @@ export default {
     },
     emailRegistration: { type: String, default: "" },
   },
+  components: {
+    //EyeSvg,
+    WarningSvg,
+    ConfirmIcon,
+  },
   data: () => ({
     emailReg: "",
     passwordConfirmation: "",
@@ -91,6 +136,9 @@ export default {
     surname: "",
     letRegister: false,
     name: "",
+    lenConfirmed: false,
+    numConfirmed: false,
+    upperLowerConfirmed: false,
   }),
   name: "RegistrationDataMenu",
   methods: {
@@ -98,24 +146,37 @@ export default {
     setEmailReg() {
       this.emailReg = this.$props.emailRegistration;
     },
+    newPasswordCheck() {
+      this.lenConfirmed = false;
+      this.numConfirmed = false;
+      this.upperLowerConfirmed = false;
 
+      let numCheck = /\d/g;
+      if (this.password.length >= 8) {
+        this.lenConfirmed = true;
+      }
+      if (numCheck.test(this.password)) {
+        this.numConfirmed = true;
+      }
+      if (
+        this.password.toUpperCase() != this.password &&
+        this.password.toLowerCase() != this.password
+      ) {
+        this.upperLowerConfirmed = true;
+      }
+    },
     hideDialog() {
       this.$emit("update:showReg", false);
     },
     validatePasswordReg() {
-      let passwordInputs = document.getElementsByName("passwordReg");
       let confText = document.getElementById("confirmationText");
 
       if (this.passwordConfirmation == this.password) {
         this.letRegister = true;
         confText.classList.add("deleted");
-        passwordInputs[0].classList.remove("redBorder");
-        passwordInputs[1].classList.remove("redBorder");
       } else {
         this.letRegister = false;
         confText.classList.remove("deleted");
-        passwordInputs[0].classList.add("redBorder");
-        passwordInputs[1].classList.add("redBorder");
       }
     },
     onRegistration() {
@@ -138,6 +199,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.settings_block {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 15px 0 15px;
+}
+.setting_item {
+  display: flex;
+
+  font-size: 14px;
+  span {
+    color: rgb(210 68 50);
+  }
+  .confirmed {
+    color: rgb(0 151 61);
+  }
+}
 .inputs_list {
   display: flex;
   flex-direction: column;
