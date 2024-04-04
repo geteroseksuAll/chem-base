@@ -43,6 +43,15 @@
           autofocus
         />
         <input
+          type="name"
+          placeholder="Название компании"
+          name="email"
+          class="input_registration"
+          v-model="companyName"
+          required
+          autofocus
+        />
+        <input
           type="password"
           placeholder="Введите пароль"
           name="passwordReg"
@@ -131,6 +140,7 @@ export default {
   },
   data: () => ({
     emailReg: "",
+    companyName: "",
     passwordConfirmation: "",
     password: "",
     surname: "",
@@ -181,9 +191,11 @@ export default {
     },
     onRegistration() {
       let params = {
-        fullName: this.name + " " + this.surname,
+        firstName: this.name,
+        lastName: this.surname,
         email: this.$props.emailRegistration,
         password: this.password,
+        companyName: this.companyName,
       };
       this.registration({ params }).then((response) => {
         if (response.status == 200) {

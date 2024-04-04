@@ -39,6 +39,7 @@ export default {
       return listOfPopularItems;
     },
     async setTransfer(context, { params, price, basketDTO }) {
+      const orderDTO = { basketDTO: basketDTO };
       const headers = {
         "Content-Type": "application/json",
         Authorization: localStorage.getItem("token"),
@@ -46,7 +47,7 @@ export default {
       const result = await axios
         .post(
           `https://backend.kimix.space/api/v1/basket/send-email`,
-          { ...params, price, basketDTO },
+          { ...params, price, orderDTO },
           { headers: headers }
         )
         .catch((error) => {

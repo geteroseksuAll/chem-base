@@ -5,7 +5,7 @@
         <div class="account_menu">
           <div
             class="user_company_name"
-            v-if="this.$store.getters.getUserInfo.companyDTO.name"
+            v-if="this.$store.getters.getUserInfo?.companyDTO?.name"
           >
             {{ this.$store.getters.getUserInfo?.companyDTO.name }}
           </div>
@@ -20,7 +20,10 @@
             </p>
             <transition name="slide-fade">
               <div class="my_procurements_list" v-if="!procurements && profile">
-                <div class="procurement" @click="component = 'myProfile'">
+                <div
+                  class="procurement"
+                  @click="this.$router.push('/user-profile/profile')"
+                >
                   Мой профиль
                 </div>
                 <div class="procurement">Пользователи</div>
@@ -46,9 +49,237 @@
               </div>
             </transition>
           </div>
+          <div class="my_products">
+            <p
+              class="menu_item_name"
+              :class="{ active: products }"
+              @click="productsMenu"
+            >
+              Мои продукты
+              <MoreIconSvg />
+            </p>
+            <transition name="slide-fade">
+              <div
+                class="my_procurements_list"
+                v-if="!profile && !procurements && products"
+              >
+                <div
+                  class="procurement"
+                  @click="this.$router.push('/user-profile/products')"
+                >
+                  Мои продукты
+                </div>
+                <div
+                  class="procurement"
+                  @click="this.$router.push('/user-profile/new-product')"
+                >
+                  Создать продукт
+                </div>
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
-      <div class="current_menu">
+      <div
+        class="current_menu"
+        v-if="this.$route.params.currentComponent == 'products'"
+      >
+        <div class="current_menu_header">Мои продукты</div>
+        <div class="current_menu_block">
+          <div class="current_menu_content">
+            <div
+              class="current_menu_info"
+              v-for="item in this.$store.getters"
+              :key="item"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="current_menu"
+        v-if="
+          this.$route.params.currentComponent == 'new-product' &&
+          this.$store.getters.getUserInfo?.companyDTO?.name
+        "
+      >
+        <div class="current_menu_header">Создать продукт</div>
+        <div class="current_menu_block">
+          <div class="current_menu_content">
+            <div class="current_menu_info">
+              <div class="menu_header">Заполните поля ниже</div>
+              <div class="inputs_list">
+                <div class="input_info">
+                  <input
+                    class="info_input"
+                    type="text"
+                    v-model="newItemName"
+                  /><span class="input_placeholder">Название продукта</span>
+                </div>
+                <div class="input_info">
+                  <input
+                    class="info_input"
+                    type="text"
+                    v-model="newItemFormula"
+                  /><span class="input_placeholder">Формула</span>
+                </div>
+                <div class="input_info">
+                  <input
+                    class="info_input"
+                    type="text"
+                    v-model="newItemInchi"
+                  /><span class="input_placeholder">Inchi</span>
+                </div>
+                <div class="input_info">
+                  <input
+                    class="info_input"
+                    type="text"
+                    v-model="newItemMolecularWeight"
+                  /><span class="input_placeholder">Молекулярный вес</span>
+                </div>
+                <div class="input_info">
+                  <input
+                    class="info_input"
+                    type="text"
+                    v-model="newItemPrice"
+                  /><span class="input_placeholder">Цена</span>
+                </div>
+                <div class="input_info">
+                  <input
+                    class="info_input"
+                    type="text"
+                    v-model="newItemCas"
+                  /><span class="input_placeholder">CAS</span>
+                </div>
+                <div class="input_info">
+                  <textarea
+                    class="info_input"
+                    type="text"
+                    v-model="newItemDescription"
+                    placeholder="Дополнительная информация для покупателя"
+                  />
+                  <span class="input_placeholder" v-if="!newItemDescription"
+                    >Описание товара</span
+                  >
+                </div>
+                <div
+                  v-if="setProductCategory"
+                  class="select_block"
+                  @click="setMainCategory = !setMainCategory"
+                >
+                  <MoreIconSvg
+                    :class="{ rotate: setMainCategory }"
+                    @click="setMainCategory = !setMainCategory"
+                  />
+                  <span class="input_placeholder"
+                    >Категория вашего продукта</span
+                  >
+                  <span>{{ mainCategoryName }}</span>
+                </div>
+
+                <transition name="slide-fade">
+                  <div class="select_list" v-if="setMainCategory">
+                    <div
+                      class="select_item"
+                      @click="
+                        setNewProductCategory(
+                          this.$store.getters.getUserInfo.categoryDTO
+                            .commandName
+                        )
+                      "
+                    >
+                      {{
+                        this.$store.getters.getUserInfo.categoryDTO.russianName
+                      }}
+                    </div>
+                  </div>
+                </transition>
+                <div
+                  v-if="setProductSubCategory"
+                  class="select_block"
+                  @click="setSubCategory = !setSubCategory"
+                >
+                  <MoreIconSvg
+                    :class="{ rotate: setSubCategory }"
+                    @click="setSubCategory = !setSubCategory"
+                  />
+                  <span class="input_placeholder"
+                    >Подкатегория вашего продукта</span
+                  >
+                  <span>{{ subCategoryName }}</span>
+                </div>
+                <transition name="slide-fade">
+                  <div class="select_list" v-if="setSubCategory">
+                    <div
+                      class="select_item"
+                      v-for="item in this.$store.getters.getSubCategoriesList
+                        .subcategoryDTOList"
+                      :key="item.id"
+                      @click="setNewProductSubCategory(item)"
+                    >
+                      {{ item.russianName }}
+                    </div>
+                  </div>
+                </transition>
+                <div
+                  v-if="setProductSubSubCategory"
+                  class="select_block"
+                  @click="setSubSubCategory = !setSubSubCategory"
+                >
+                  <MoreIconSvg
+                    :class="{ rotate: setSubSubCategory }"
+                    @click="setSubSubCategory = !setSubSubCategory"
+                  />
+                  <span class="input_placeholder"
+                    >Подподкатегория вашего продукта</span
+                  >
+                  <span>{{ subSubCategoryName }}</span>
+                </div>
+                <transition name="slide-fade">
+                  <div class="select_list" v-if="setSubSubCategory">
+                    <div
+                      class="select_item"
+                      v-for="item in this.$store.getters.getSubSubCategoriesList
+                        .subsubcategoryDTOList"
+                      :key="item.id"
+                      @click="setNewProductSubSubCategory(item)"
+                    >
+                      {{ item.russianName }}
+                    </div>
+                  </div>
+                </transition>
+                <button
+                  class="save_button"
+                  type="button"
+                  @click="setNewProduct"
+                >
+                  Сохранить
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="current_menu"
+        v-else-if="
+          this.$route.params.currentComponent == 'new-product' &&
+          !this.$store.getters.getUserInfo?.companyDTO?.name
+        "
+      >
+        <div class="current_menu_header">
+          Заполните все важные поля в вашем профиле прежде чем приступить к
+          добавлению товаров
+        </div>
+        <div class="current_menu_block">
+          <div class="current_menu_content">
+            <div class="current_menu_info"></div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="current_menu"
+        v-if="this.$route.params.currentComponent == 'profile'"
+      >
         <div class="current_menu_header">Мой профиль</div>
         <div class="current_menu_block">
           <div class="current_menu_content">
@@ -105,7 +336,10 @@
                   @click="categorySelect = !categorySelect"
                 />
                 <span class="input_placeholder">Категория ваших продуктов</span>
-                <span>{{ marketCategoryRus }}</span>
+                <span v-if="marketCategoryRus != null">{{
+                  marketCategoryRus
+                }}</span>
+                <span v-else>Не задано</span>
               </div>
               <transition name="slide-fade">
                 <div class="select_list" v-if="categorySelect">
@@ -127,12 +361,7 @@
                   ref="jobTitle"
                 /><span class="input_placeholder">Ваша должность</span>
               </div>
-              <vue-tel-input
-                v-bind="bindProps"
-                v-model="phone"
-                @validate="phoneObject"
-                ref="numberInput"
-              ></vue-tel-input>
+
               <button class="save_button" type="button" @click="saveMethod">
                 Сохранить
               </button>
@@ -228,7 +457,6 @@
 </template>
 
 <script>
-import { VueTelInput } from "vue-tel-input";
 import { mapActions } from "vuex";
 import {
   MoreIconSvg,
@@ -237,7 +465,6 @@ import {
   ShowSvg,
   EyeSvg,
 } from "@/components/UI";
-import "vue-tel-input/vue-tel-input.css";
 export default {
   name: "UserProfile",
   data() {
@@ -245,7 +472,7 @@ export default {
     const procurements = false;
     const lastName = "";
     const profile = false;
-    const component = null;
+    const component = this.$route.params.component;
     const userEmail = "";
     const userCompany = "";
     const marketCategoryRus = "";
@@ -258,8 +485,45 @@ export default {
     let lenConfirmed = false;
     let numConfirmed = false;
     let upperLowerConfirmed = false;
+    const products = false;
+
+    //newItemMenu
+    const mainCategoryName = "Не задано";
+    const newItemName = "";
+    const newItemFormula = "";
+    const newItemInchi = "";
+    const newItemPrice = 0;
+    const newItemMolecularWeight = "";
+    const newItemDescription = "";
+    const newItemCas = [];
+    const setProductCategory = true;
+    const setSubCategory = false;
+    const setMainCategory = false;
+    const setProductSubCategory = false;
+    const subCategoryName = "Не задано";
+    const subSubCategoryName = "Не задано";
+    const setSubSubCategory = false;
+    const subSubCategory = {};
 
     return {
+      //newItemMenu
+      newItemName,
+      mainCategoryName,
+      newItemMolecularWeight,
+      newItemInchi,
+      newItemPrice,
+      newItemCas,
+      newItemFormula,
+      subSubCategory,
+      subSubCategoryName,
+      setSubSubCategory,
+      setMainCategory,
+      newItemDescription,
+      setProductCategory,
+      setProductSubCategory,
+      setSubCategory,
+      subCategoryName,
+      //endNewItemMenu
       numConfirmed,
       upperLowerConfirmed,
       lenConfirmed,
@@ -270,6 +534,7 @@ export default {
       userEmail,
       bindProps: { placeholder: "Введите номер телефона" },
       userCompany,
+      products,
       phone,
       procurements,
       profile,
@@ -286,9 +551,12 @@ export default {
   methods: {
     ...mapActions([
       "getUserInfoRequest",
+      "getSubCategoriesListRequest",
       "getCategoriesListRequest",
       "setUserInfoRequest",
       "getPasswordStatusRequest",
+      "getSubSubCategoriesListRequest",
+      "setNewItemRequest",
     ]),
     newPasswordCheck() {
       this.lenConfirmed = false;
@@ -296,7 +564,7 @@ export default {
       this.upperLowerConfirmed = false;
 
       let numCheck = /\d/g;
-      if (this.newPassword.length >= 8) {
+      if (this.newPassword.length > 8) {
         this.lenConfirmed = true;
       }
       if (numCheck.test(this.newPassword)) {
@@ -308,6 +576,29 @@ export default {
       ) {
         this.upperLowerConfirmed = true;
       }
+    },
+    myProducts() {},
+    setNewProductCategory(name) {
+      this.setMainCategory = !this.setMainCategory;
+      this.subCategoryName = "Не найдено";
+      this.subSubCategoryName = "Не найдено";
+      this.mainCategoryName =
+        this.$store.getters.getUserInfo.categoryDTO.russianName;
+      this.setProductSubCategory = true;
+      this.getSubCategoriesListRequest({ name: name });
+    },
+    setNewProductSubCategory(item) {
+      this.setSubCategory = !this.setSubCategory;
+      this.subCategoryName = item.russianName;
+      this.subSubCategoryName = "Не задано";
+      this.setProductSubSubCategory = true;
+      this.getSubSubCategoriesListRequest({ name: item.commandName });
+    },
+    setNewProductSubSubCategory(item) {
+      console.log(item);
+      this.setSubSubCategory = !this.setSubSubCategory;
+      this.subSubCategoryName = item.russianName;
+      this.subSubCategory = item;
     },
     recoverPassword() {
       if (this.numConfirmed && this.currentPassword != null) {
@@ -321,18 +612,32 @@ export default {
         });
       }
     },
+    setNewProduct() {
+      const params = {
+        commonName: this.newItemName,
+        inchi: this.newItemInchi,
+        molecularWeight: this.newItemMolecularWeight,
+        price: this.newItemPrice,
+        casNumbers: [this.newItemCas],
+        description: this.newItemDescription,
+        subsubcategoryDTO: this.subSubCategory,
+      };
+      console.log(params);
+      this.setNewItemRequest({ params: params });
+    },
     settingsMenu() {
       this.profile = !this.profile;
       this.procurements = false;
+      this.products = false;
     },
     filterStr() {
       this.lastName = this.lastName.replace(/[^a-zа-яё\s]/gi, "");
       this.firstName = this.firstName.replace(/[^a-zа-яё\s]/gi, "");
     },
     saveMethod() {
-      if (this.isValid && this.userJobTitle != null) {
+      if (this.userJobTitle != null) {
         this.$refs.jobTitle.classList.remove("redBorder");
-        console.log();
+
         this.setUserInfoRequest({
           firstName: this.firstName,
           lastName: this.lastName,
@@ -343,6 +648,10 @@ export default {
             name: this.marketCategoryName,
             russianName: this.marketCategoryRus,
           },
+        }).then((response) => {
+          if (response.status == 200) {
+            location.reload();
+          }
         });
       } else {
         if (this.isValid) {
@@ -351,6 +660,7 @@ export default {
       }
     },
     phoneObject(object) {
+      console.log(this.isValid);
       if (object.valid || object.valid == null) {
         this.isValid = true;
       } else {
@@ -358,13 +668,20 @@ export default {
       }
     },
     changeMarketCategory(item) {
+      console.log(this.$store.getters.getCategoriesList);
       this.marketCategoryRus = item.russianName;
       this.categorySelect = false;
       this.marketCategoryId = item.id;
     },
+    productsMenu() {
+      this.products = !this.products;
+      this.profile = false;
+      this.procurements = false;
+    },
     procurementsMenu() {
       this.procurements = !this.procurements;
       this.profile = false;
+      this.products = false;
     },
     close(e) {
       if (this.categorySelect == true && e.target.className != "select_block") {
@@ -373,7 +690,6 @@ export default {
     },
   },
   components: {
-    VueTelInput,
     MoreIconSvg,
     ConfirmIcon,
     WarningSvg,
@@ -391,7 +707,7 @@ export default {
     if (this.isLoggedIn) {
       this.getUserInfoRequest();
       this.getCategoriesListRequest();
-      this.phone = userInfo.phone;
+      this.phone = userInfo.phoneNumber;
       this.lastName = userInfo.lastName;
       this.userCompany = userInfo.companyDTO?.name;
       this.userEmail = userInfo.email;
@@ -446,12 +762,13 @@ export default {
   position: absolute;
   z-index: 10000;
   max-width: 450px;
+  text-align: left;
   background-color: #fff;
   max-height: 160px;
   box-sizing: border-box;
   overflow: hidden auto;
   border: 1px solid #cdcdcd;
-  min-width: 192px;
+  min-width: 300px;
   box-shadow: rgba(0, 0, 0, 0.08) 0px 12px 20px, rgba(0, 0, 0, 0.04) 0px 4px 8px,
     rgba(0, 0, 0, 0.06) 0px 0px 16px;
 }
@@ -505,6 +822,10 @@ input:disabled + .input_placeholder {
     transform: rotate(270deg);
   }
 }
+textarea::placeholder {
+  font-size: 14px;
+  color: #b2b2b2;
+}
 .input_placeholder {
   margin: 0px;
   font-style: normal;
@@ -537,6 +858,20 @@ input:disabled + .input_placeholder {
     background-color: rgb(255, 255, 255);
     border-radius: 4px;
     height: 56px;
+  }
+  textarea {
+    overflow: hidden;
+    width: 100%;
+    padding: 26px 0 10px 16px;
+    outline: none;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.375;
+    letter-spacing: 0px;
+    border: 1px solid rgb(204, 204, 204);
+    background-color: rgb(255, 255, 255);
+    border-radius: 4px;
+    height: 100px;
   }
   select {
     width: 100%;

@@ -181,11 +181,11 @@ export default {
       this.basketDTO = [];
       for (let i = 0; i < basketAllItems.length; i++) {
         this.basketDTO.push({
-          count: basketAllItems[i].count,
-          units: basketAllItems[i].units,
+          count: basketAllItems[i].orderDTO.productCount,
+          units: basketAllItems[i].orderDTO.units,
           productDTO: {
-            id: basketAllItems[i].productDTO.id,
-            commonName: basketAllItems[i].productDTO.commonName,
+            id: basketAllItems[i].orderDTO.productDTO.id,
+            commonName: basketAllItems[i].orderDTO.productDTO.commonName,
           },
         });
       }
@@ -287,6 +287,7 @@ input {
   right: 0%;
   background: rgb(0, 0, 0, 0.5);
   position: fixed;
+  z-index: 20000;
 }
 .greenButton {
   background: #00ab00;

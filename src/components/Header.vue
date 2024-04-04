@@ -9,14 +9,14 @@
           <HeaderOptions />
         </div>
 
-        <div class="catalog_link_section">
-          <router-link
-            class="router_link_to_catalog"
-            :to="{ name: 'catalogSearch' }"
-          >
+        <router-link
+          class="router_link_to_catalog"
+          :to="{ name: 'catalogSearch' }"
+        >
+          <div class="catalog_link_section">
             <p class="catalog_link_section_text">Каталог</p>
-          </router-link>
-        </div>
+          </div>
+        </router-link>
       </div>
       <div class="input-section">
         <input
@@ -70,7 +70,7 @@
               <router-link
                 style="color: inherit; text-decoration: none"
                 class="router_link_user"
-                to="/user-profile"
+                to="/user-profile/profile"
               >
                 <div class="user_info_text">
                   <div class="user_name">
@@ -106,10 +106,10 @@
                     />
                     Настройки
                   </div>
-                  <router-link to="/user-profile">
+                  <router-link to="/user-profile/profile">
                     <div class="slide_content_left">Мой кабинет</div>
                   </router-link>
-                  <router-link to="/user-profile">
+                  <router-link to="/user-profile/company">
                     <div class="slide_content_left">Мои пользователи</div>
                   </router-link>
                 </div>
@@ -132,11 +132,11 @@
                     />
                     Мои заказы
                   </div>
-                  <router-link to="/user-profile">
+                  <router-link to="/user-profile/orders">
                     <div class="slide_content_left">Мои заказы</div>
                   </router-link>
-                  <router-link to="/user-profile">
-                    <div class="slide_content_left">Закупки мне</div>
+                  <router-link to="/user-profile/products">
+                    <div class="slide_content_left">Мои товары</div>
                   </router-link>
                 </div></TransitionGroup
               >

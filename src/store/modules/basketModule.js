@@ -10,7 +10,7 @@ export default {
     },
     deleteItemById(state, id) {
       state.basketAllItems = state.basketAllItems.filter(
-        (item) => item.productDTO.id != id
+        (item) => item.orderDTO.productDTO.id != id
       );
     },
   },

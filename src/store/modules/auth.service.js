@@ -48,11 +48,7 @@ export default {
           "https://backend.kimix.space/api/v1/auth/send-code",
           params
         );
-        const token = response.data.token;
-        const userData = response.data.user;
-        localStorage.setItem("token", token);
 
-        commit("auth_success", token, userData);
         return response;
       } catch (error) {
         commit("auth_error", error);
@@ -67,6 +63,12 @@ export default {
           "https://backend.kimix.space/api/v1/auth/registration",
           { ...params }
         );
+
+        const token = response.data.token;
+        const userData = response.data.user;
+        localStorage.setItem("token", token);
+
+        commit("auth_success", token, userData);
         return response;
       } catch (error) {
         commit("auth_error", error);

@@ -20,21 +20,23 @@
           <div
             class="basket_item"
             v-for="item in this.$store.getters?.getBasketAllItems"
-            :key="item.productDTO.id"
+            :key="item.orderDTO.productDTO.id"
           >
             <div
               class="basket_img"
-              v-if="item.productDTO?.image"
-              v-html="item.productDTO?.image"
+              v-if="item.orderDTO.productDTO?.image"
+              v-html="item.orderDTO.productDTO?.image"
             ></div>
-            <div class="basket_item_info" v-if="item.productDTO">
+            <div class="basket_item_info" v-if="item.orderDTO.productDTO">
               <div class="item_info_content">
                 <div class="item_text_info">
                   <p class="item_articule">
                     <span class="item_articule_text">артикул : </span
-                    >{{ item.productDTO.id }}
+                    >{{ item.orderDTO.productDTO.id }}
                   </p>
-                  <p class="item_name">{{ item.productDTO.commonName }}</p>
+                  <p class="item_name">
+                    {{ item.orderDTO.productDTO.commonName }}
+                  </p>
                 </div>
                 <div class="item_quantity_buttons">
                   <div class="item_quantity">
@@ -45,9 +47,12 @@
                           name="value_amount"
                           id=""
                           class="value_amount"
-                          v-model="item.units"
+                          v-model="item.orderDTO.units"
                           @change="
-                            setItemUnitsMethod(item.productDTO.id, item.units)
+                            setItemUnitsMethod(
+                              item.orderDTO.productDTO.id,
+                              item.orderDTO.units
+                            )
                           "
                         >
                           <option value="КГ">КГ</option>
@@ -68,10 +73,11 @@
                         @click="
                           if (item.count > 1) {
                             setItemAmountMethod(
-                              item.productDTO.id,
-                              parseInt(item.count) - 1
+                              item.orderDTO.productDTO.id,
+                              parseInt(item.orderDTO.productCount) - 1
                             );
-                            item.count = parseInt(item.count) - 1;
+                            item.orderDTO.productCount =
+                              parseInt(item.orderDTO.productCount) - 1;
                           }
                         "
                       >
@@ -82,7 +88,7 @@
                         :placeholder="item?.count"
                         id="item_amount"
                         class="amount"
-                        v-model="item.count"
+                        v-model="item.orderDTO.productCount"
                         @input="checkItemCount(item)"
                       />
                       <button
@@ -91,10 +97,11 @@
                         type="button"
                         @click="
                           setItemAmountMethod(
-                            item.productDTO.id,
-                            parseInt(item.count) + 1
+                            item.orderDTO.productDTO.id,
+                            parseInt(item.orderDTO.productCount) + 1
                           );
-                          item.count = parseInt(item.count) + 1;
+                          item.orderDTO.productCount =
+                            parseInt(item.orderDTO.productCount) + 1;
                         "
                       >
                         +
@@ -106,15 +113,15 @@
               <div class="item_price">
                 <CloseIcon
                   class="basket_close_icon"
-                  @click="deleteItemFromCartMethod(item.productDTO.id)"
+                  @click="deleteItemFromCartMethod(item.orderDTO.productDTO.id)"
                   style="cursor: pointer"
                 />
                 <p class="item_current_price">
                   {{
                     setItemPrice(
-                      item?.productDTO.price *
-                        item.count *
-                        checkItemAmount(item.units)
+                      item?.orderDTO.productDTO.price *
+                        item.orderDTO.productCount *
+                        checkItemAmount(item.orderDTO.units)
                     )
                   }}
                   <span class="green-text">$</span>
@@ -185,14 +192,20 @@ export default {
     },
 
     checkItemCount(item) {
-      if (item.count == "") {
+      if (item.orderDTO.productCount == "") {
         return;
       }
       if (item.count > 0) {
-        this.setItemAmountMethod(item.productDTO.id, item.count);
+        this.setItemAmountMethod(
+          item.orderDTO.productDTO.id,
+          item.orderDTO.productCount
+        );
       } else {
         item.count = 1;
-        this.setItemAmountMethod(item.productDTO.id, item.count);
+        this.setItemAmountMethod(
+          item.orderDTO.productDTO.id,
+          item.orderDTO.productCount
+        );
       }
     },
     checkItemsPrice() {
@@ -200,9 +213,9 @@ export default {
       let basketItems = this.$store.getters?.getBasketAllItems;
       for (let i = 0; i < basketItems.length; i++) {
         totalPrice +=
-          basketItems[i].productDTO.price *
-          basketItems[i].count *
-          this.checkItemAmount(basketItems[i].units);
+          basketItems[i].orderDTO.productDTO.price *
+          basketItems[i].orderDTO.productCount *
+          this.checkItemAmount(basketItems[i].orderDTO.units);
       }
       return this.setItemPrice(totalPrice);
     },

@@ -335,6 +335,7 @@ export default {
         if (resp.status == 200) {
           toCartButton.classList.add("changed");
           toCartButton.textContent = "В КОРЗИНЕ";
+          this.getBasketAllItemsRequest();
         }
       });
     },
@@ -343,12 +344,13 @@ export default {
   computed: {
     currentItem() {
       const currentItem = this.$store.getters.getCurrentItem;
+      console.log(currentItem);
       return currentItem;
     },
 
     inTheCart() {
       const currentItem = this.$store.getters.getBasketAllItems?.find(
-        (item) => item.productDTO.id == this.$route.params.id
+        (item) => item.orderDTO.productDTO.id == this.$route.params.id
       );
       if (currentItem) {
         return true;

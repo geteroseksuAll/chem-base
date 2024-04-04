@@ -27,7 +27,6 @@ export default {
         jobPosition: jobPosition,
         categoryDTO: categoryDTO,
       };
-      console.log(params);
       const headers = {
         Authorization: localStorage.getItem("token"),
       };
@@ -47,6 +46,19 @@ export default {
         .catch((error) => {
           throw error;
         });
+      return result;
+    },
+    async setNewItemRequest(context, { params }) {
+      const headers = {
+        Authorization: localStorage.getItem("token"),
+      };
+      console.log(params);
+      const paramss = params;
+      const result = await axios.post(
+        `https://backend.kimix.space/api/v1/user-profile/add-product`,
+        { ...paramss },
+        { headers: headers }
+      );
       return result;
     },
     async getUserInfoRequest() {

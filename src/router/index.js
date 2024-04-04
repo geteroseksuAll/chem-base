@@ -39,8 +39,9 @@ const routes = [
     name: "catalogItem",
     component: CatalogItem,
   },
+
   {
-    path: "/user-profile",
+    path: "/user-profile/:currentComponent",
     name: "myCabinet",
     component: UserProfile,
   },
