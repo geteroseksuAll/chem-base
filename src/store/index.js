@@ -4,6 +4,7 @@ import authService from "./modules/auth.service";
 import basketModule from "./modules/basketModule";
 import catalogModule from "./modules/catalogModule";
 import userProfile from "./modules/userProfile";
+import adminPanel from "./modules/adminPanel";
 
 const store = new createStore({
   state: {},
@@ -12,6 +13,7 @@ const store = new createStore({
   actions: {},
   modules: {
     searchList: searchList,
+    adminPanel,
     authService,
     basketModule,
     catalogModule,

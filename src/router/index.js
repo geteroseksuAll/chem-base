@@ -7,6 +7,7 @@ import CatalogSubCategoriesBlock from "@/pages/CatalogSubCategories";
 import CatalogItems from "@/pages/CatalogItems.vue";
 import CatalogMainCategoryBlock from "@/pages/CatalogMainCategory";
 import UserProfile from "@/pages/UserProfile.vue";
+import AdminPanel from "@/pages/AdminPanel.vue";
 
 const routes = [
   {
@@ -50,6 +51,11 @@ const routes = [
     path: "/basket",
     name: "basket",
     component: BasketPage,
+  },
+  {
+    path: "/admin-panel",
+    name: "adminPanel",
+    component: AdminPanel,
   },
 ];
 

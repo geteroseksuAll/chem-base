@@ -20,9 +20,15 @@ import WarningSvg from "./icons/WarningSvg.vue";
 import ConfirmIcon from "./icons/ConfirmIcon.vue";
 import EyeSvg from "./icons/EyeSvg.vue";
 import ShowSvg from "./icons/ShowSvg.vue";
+import CompanySvg from "./icons/CompanySvg.vue";
+import AdminSvg from "./icons/AdminSvg.vue";
+import RejectButton from "./icons/RejectButton.vue";
 
 export {
   ShowSvg,
+  AdminSvg,
+  CompanySvg,
+  RejectButton,
   EyeSvg,
   ConfirmIcon,
   CloseIcon,

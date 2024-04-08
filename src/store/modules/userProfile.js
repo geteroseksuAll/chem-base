@@ -2,10 +2,11 @@ import axios from "axios";
 import store from "..";
 
 export default {
-  state: { userInfo: [], userPasswordStatus: "" },
+  state: { userInfo: [], userPasswordStatus: "", userRole: "" },
   getters: {
     getUserInfo: ({ userInfo }) => userInfo,
     getPasswordStatus: ({ userPasswordStatus }) => userPasswordStatus,
+    getUserRole: ({ userRole }) => userRole,
   },
   mutations: {
     changeUserInfo(state, data) {
@@ -13,6 +14,9 @@ export default {
     },
     changePasswordStatus(state, data) {
       state.userPasswordStatus = data;
+    },
+    changeUserRole(state, data) {
+      state.userRole = data;
     },
   },
   actions: {
@@ -52,7 +56,6 @@ export default {
       const headers = {
         Authorization: localStorage.getItem("token"),
       };
-      console.log(params);
       const paramss = params;
       const result = await axios.post(
         `https://backend.kimix.space/api/v1/user-profile/add-product`,
@@ -71,8 +74,8 @@ export default {
           headers: headers,
         }
       );
-
       store.commit("changeUserInfo", result.data);
+      store.commit("changeUserRole", result.data.role);
       return result;
     },
   },

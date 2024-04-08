@@ -7,9 +7,11 @@
             class="user_company_name"
             v-if="this.$store.getters.getUserInfo?.companyDTO?.name"
           >
-            {{ this.$store.getters.getUserInfo?.companyDTO.name }}
+            <CompanySvg />{{ this.$store.getters.getUserInfo?.companyDTO.name }}
           </div>
-          <div class="user_company_name menu_item_name" v-else>Не задано</div>
+          <div class="user_company_name menu_item_name" v-else>
+            <CompanySvg /> Не задано
+          </div>
           <div class="my_profile">
             <p
               class="menu_item_name"
@@ -112,7 +114,17 @@
                   <input
                     class="info_input"
                     type="text"
+                    v-model="newItemCas"
+                    @input="filterStr"
+                    ref="CAS"
+                  /><span class="input_placeholder">CAS</span>
+                </div>
+                <div class="input_info">
+                  <input
+                    class="info_input"
+                    type="text"
                     v-model="newItemName"
+                    ref="itemName"
                   /><span class="input_placeholder">Название продукта</span>
                 </div>
                 <div class="input_info">
@@ -120,19 +132,31 @@
                     class="info_input"
                     type="text"
                     v-model="newItemFormula"
+                    ref="itemFormula"
                   /><span class="input_placeholder">Формула</span>
                 </div>
                 <div class="input_info">
                   <input
                     class="info_input"
                     type="text"
+                    v-model="newItemSmiles"
+                    ref="itemSmiles"
+                  /><span class="input_placeholder">SMILES</span>
+                </div>
+                <div class="input_info">
+                  <input
+                    class="info_input"
+                    type="text"
                     v-model="newItemInchi"
+                    ref="itemInchi"
                   /><span class="input_placeholder">Inchi</span>
                 </div>
                 <div class="input_info">
                   <input
                     class="info_input"
                     type="text"
+                    @input="filterStr"
+                    ref="itemMolecularWeight"
                     v-model="newItemMolecularWeight"
                   /><span class="input_placeholder">Молекулярный вес</span>
                 </div>
@@ -141,20 +165,17 @@
                     class="info_input"
                     type="text"
                     v-model="newItemPrice"
+                    @input="filterStr"
+                    ref="itemPrice"
                   /><span class="input_placeholder">Цена</span>
                 </div>
-                <div class="input_info">
-                  <input
-                    class="info_input"
-                    type="text"
-                    v-model="newItemCas"
-                  /><span class="input_placeholder">CAS</span>
-                </div>
+
                 <div class="input_info">
                   <textarea
                     class="info_input"
                     type="text"
                     v-model="newItemDescription"
+                    ref="itemDescription"
                     placeholder="Дополнительная информация для покупателя"
                   />
                   <span class="input_placeholder" v-if="!newItemDescription"
@@ -164,6 +185,7 @@
                 <div
                   v-if="setProductCategory"
                   class="select_block"
+                  ref="setCategory"
                   @click="setMainCategory = !setMainCategory"
                 >
                   <MoreIconSvg
@@ -177,7 +199,11 @@
                 </div>
 
                 <transition name="slide-fade">
-                  <div class="select_list" v-if="setMainCategory">
+                  <div
+                    class="select_list"
+                    name="select_list"
+                    v-if="setMainCategory"
+                  >
                     <div
                       class="select_item"
                       @click="
@@ -195,6 +221,7 @@
                 </transition>
                 <div
                   v-if="setProductSubCategory"
+                  ref="setCategory"
                   class="select_block"
                   @click="setSubCategory = !setSubCategory"
                 >
@@ -208,7 +235,11 @@
                   <span>{{ subCategoryName }}</span>
                 </div>
                 <transition name="slide-fade">
-                  <div class="select_list" v-if="setSubCategory">
+                  <div
+                    class="select_list"
+                    name="select_list"
+                    v-if="setSubCategory"
+                  >
                     <div
                       class="select_item"
                       v-for="item in this.$store.getters.getSubCategoriesList
@@ -222,6 +253,7 @@
                 </transition>
                 <div
                   v-if="setProductSubSubCategory"
+                  ref="setCategory"
                   class="select_block"
                   @click="setSubSubCategory = !setSubSubCategory"
                 >
@@ -235,7 +267,11 @@
                   <span>{{ subSubCategoryName }}</span>
                 </div>
                 <transition name="slide-fade">
-                  <div class="select_list" v-if="setSubSubCategory">
+                  <div
+                    class="select_list"
+                    name="select_list"
+                    v-if="setSubSubCategory"
+                  >
                     <div
                       class="select_item"
                       v-for="item in this.$store.getters.getSubSubCategoriesList
@@ -251,6 +287,7 @@
                   class="save_button"
                   type="button"
                   @click="setNewProduct"
+                  ref="saveButton"
                 >
                   Сохранить
                 </button>
@@ -362,7 +399,12 @@
                 /><span class="input_placeholder">Ваша должность</span>
               </div>
 
-              <button class="save_button" type="button" @click="saveMethod">
+              <button
+                class="save_button"
+                type="button"
+                @click="saveMethod"
+                ref="saveButtonProfile"
+              >
                 Сохранить
               </button>
             </div>
@@ -444,6 +486,7 @@
                   class="save_button"
                   type="button"
                   @click="recoverPassword"
+                  ref="saveButtonPassword"
                 >
                   Восстановить
                 </button>
@@ -464,6 +507,7 @@ import {
   ConfirmIcon,
   ShowSvg,
   EyeSvg,
+  CompanySvg,
 } from "@/components/UI";
 export default {
   name: "UserProfile",
@@ -491,11 +535,12 @@ export default {
     const mainCategoryName = "Не задано";
     const newItemName = "";
     const newItemFormula = "";
+    const newItemSmiles = "";
     const newItemInchi = "";
-    const newItemPrice = 0;
+    const newItemPrice = "";
     const newItemMolecularWeight = "";
     const newItemDescription = "";
-    const newItemCas = [];
+    const newItemCas = "";
     const setProductCategory = true;
     const setSubCategory = false;
     const setMainCategory = false;
@@ -504,12 +549,14 @@ export default {
     const subSubCategoryName = "Не задано";
     const setSubSubCategory = false;
     const subSubCategory = {};
+    const letSetNewItem = false;
 
     return {
       //newItemMenu
       newItemName,
       mainCategoryName,
       newItemMolecularWeight,
+      newItemSmiles,
       newItemInchi,
       newItemPrice,
       newItemCas,
@@ -523,6 +570,7 @@ export default {
       setProductSubCategory,
       setSubCategory,
       subCategoryName,
+      letSetNewItem,
       //endNewItemMenu
       numConfirmed,
       upperLowerConfirmed,
@@ -580,8 +628,8 @@ export default {
     myProducts() {},
     setNewProductCategory(name) {
       this.setMainCategory = !this.setMainCategory;
-      this.subCategoryName = "Не найдено";
-      this.subSubCategoryName = "Не найдено";
+      this.subCategoryName = "Не задано";
+      this.subSubCategoryName = "Не задано";
       this.mainCategoryName =
         this.$store.getters.getUserInfo.categoryDTO.russianName;
       this.setProductSubCategory = true;
@@ -595,7 +643,6 @@ export default {
       this.getSubSubCategoriesListRequest({ name: item.commandName });
     },
     setNewProductSubSubCategory(item) {
-      console.log(item);
       this.setSubSubCategory = !this.setSubSubCategory;
       this.subSubCategoryName = item.russianName;
       this.subSubCategory = item;
@@ -606,13 +653,23 @@ export default {
           password: this.currentPassword,
           newPassword: this.newPassword,
           email: this.userEmail,
-        }).catch((error) => {
-          this.$refs.currentPassword.classList.add("redBorder");
-          return error;
-        });
+        })
+          .then((resp) => {
+            if (resp.status == 200) {
+              this.$refs.saveButtonPassword.classList.add("confirmed");
+              this.$refs.saveButtonPassword.textContent = "Изменено";
+            }
+          })
+          .catch((error) => {
+            this.$refs.currentPassword.classList.add("redBorder");
+            return error;
+          });
       }
     },
     setNewProduct() {
+      let listsWrong = document.querySelectorAll(".select_block");
+      let itemsWrong = document.getElementsByClassName("info_input");
+      this.letSetNewItem = true;
       const params = {
         commonName: this.newItemName,
         inchi: this.newItemInchi,
@@ -622,8 +679,47 @@ export default {
         description: this.newItemDescription,
         subsubcategoryDTO: this.subSubCategory,
       };
-      console.log(params);
-      this.setNewItemRequest({ params: params });
+      console.log(params.subsubcategoryDTO);
+      if (
+        this.mainCategoryName != null &&
+        this.subCategoryName != null &&
+        this.subSubCategoryName != null &&
+        params.commonName &&
+        params.inchi &&
+        params.molecularWeight &&
+        params.price &&
+        params.casNumbers &&
+        params.description &&
+        params.subsubcategoryDTO?.name
+      ) {
+        for (let i = 0; i < itemsWrong.length; i++) {
+          itemsWrong[i].classList.remove("redBorder");
+        }
+        this.setNewItemRequest({ params: params }).then((resp) => {
+          if (resp.status == 200) {
+            this.$refs.saveButton.classList.add("confirmed");
+            this.$refs.saveButton.textContent = "Добавлено";
+          }
+        });
+      } else {
+        for (let i = 0; i < listsWrong.length; i++) {
+          if (
+            listsWrong[i].querySelector("span:not(.input_placeholder)")
+              .textContent == "Не задано"
+          ) {
+            listsWrong[i].classList.add("redBorder");
+          } else {
+            listsWrong[i].classList.remove("redBorder");
+          }
+        }
+        for (let i = 0; i < itemsWrong.length; i++) {
+          if (itemsWrong[i].value) {
+            itemsWrong[i].classList.remove("redBorder");
+          } else {
+            itemsWrong[i].classList.add("redBorder");
+          }
+        }
+      }
     },
     settingsMenu() {
       this.profile = !this.profile;
@@ -631,8 +727,30 @@ export default {
       this.products = false;
     },
     filterStr() {
-      this.lastName = this.lastName.replace(/[^a-zа-яё\s]/gi, "");
-      this.firstName = this.firstName.replace(/[^a-zа-яё\s]/gi, "");
+      if (this.lastName) {
+        this.lastName = this.lastName.replace(/[^a-zа-яё\s]/gi, "");
+      }
+      if (this.newItemCas) {
+        this.newItemCas = this.newItemCas.match(/\d+/g);
+        if (this.newItemCas) {
+          this.newItemCas = this.newItemCas.join("");
+        }
+      }
+      if (this.newItemMolecularWeight) {
+        this.newItemMolecularWeight = this.newItemMolecularWeight.match(/\d+/g);
+        if (this.newItemMolecularWeight) {
+          this.newItemMolecularWeight = this.newItemMolecularWeight.join("");
+        }
+      }
+      if (this.newItemPrice) {
+        this.newItemPrice = this.newItemPrice.match(/\d+/g);
+        if (this.newItemPrice) {
+          this.newItemPrice = this.newItemPrice.join("");
+        }
+      }
+      if (this.firstName) {
+        this.firstName = this.firstName.replace(/[^a-zа-яё\s]/gi, "");
+      }
     },
     saveMethod() {
       if (this.userJobTitle != null) {
@@ -650,7 +768,8 @@ export default {
           },
         }).then((response) => {
           if (response.status == 200) {
-            location.reload();
+            this.$refs.saveButtonProfile.classList.add("confirmed");
+            this.$refs.saveButtonProfile.textContent = "Сохранено";
           }
         });
       } else {
@@ -660,7 +779,6 @@ export default {
       }
     },
     phoneObject(object) {
-      console.log(this.isValid);
       if (object.valid || object.valid == null) {
         this.isValid = true;
       } else {
@@ -668,7 +786,6 @@ export default {
       }
     },
     changeMarketCategory(item) {
-      console.log(this.$store.getters.getCategoriesList);
       this.marketCategoryRus = item.russianName;
       this.categorySelect = false;
       this.marketCategoryId = item.id;
@@ -695,6 +812,7 @@ export default {
     WarningSvg,
     ShowSvg,
     EyeSvg,
+    CompanySvg,
   },
   computed: {
     isLoggedIn: function () {
@@ -704,18 +822,22 @@ export default {
   mounted() {
     const userInfo = this.$store.getters.getUserInfo;
     addEventListener("click", this.close);
+    4;
+    if (this.userRole == "ADMIN") {
+      console.log("1");
+    }
     if (this.isLoggedIn) {
       this.getUserInfoRequest();
       this.getCategoriesListRequest();
-      this.phone = userInfo.phoneNumber;
-      this.lastName = userInfo.lastName;
-      this.userCompany = userInfo.companyDTO?.name;
-      this.userEmail = userInfo.email;
-      this.marketCategoryRus = userInfo.categoryDTO?.russianName;
-      this.firstName = userInfo.firstName;
-      this.userJobTitle = userInfo.jobPosition;
-      this.marketCategoryName = userInfo.categoryDTO?.name;
-      this.marketCategoryId = userInfo.categoryDTO?.id;
+      this.phone = userInfo?.phoneNumber;
+      this.lastName = userInfo?.lastName;
+      this.userCompany = userInfo?.companyDTO?.name;
+      this.userEmail = userInfo?.email;
+      this.marketCategoryRus = userInfo?.categoryDTO?.russianName;
+      this.firstName = userInfo?.firstName;
+      this.userJobTitle = userInfo?.jobPosition;
+      this.marketCategoryName = userInfo?.categoryDTO?.name;
+      this.marketCategoryId = userInfo?.categoryDTO?.id;
     }
   },
 };
@@ -731,6 +853,11 @@ export default {
   .confirmed {
     color: rgb(0 151 61);
   }
+}
+.menu_header {
+  margin: 0px 0px 15px 0px;
+  font-size: 22px;
+  font-weight: 500;
 }
 .reset_menu_header {
   margin: 50px 0 20px 0;
@@ -755,7 +882,7 @@ export default {
   line-height: 1.375;
   transition: 0.3s;
 }
-.save_button:hover {
+.save_button:hover:not(.confirmed) {
   background-color: #00d2ac;
 }
 .select_list {
@@ -783,6 +910,7 @@ export default {
 .select_item:hover {
   background: rgb(244 244 244);
 }
+
 .select_block {
   overflow: hidden;
   position: relative;
@@ -1006,10 +1134,20 @@ textarea::placeholder {
 
 .user_company_name {
   cursor: auto;
+  display: flex;
   border-bottom: 1px solid #cdcdcd;
   padding: 0px 0px 10px 10px;
+  svg {
+    margin: 0px 10px 0 5px;
+    width: 20px;
+    height: 20px;
+  }
 }
 
+.confirmed {
+  background: #e0fff9;
+  color: #14d8b5;
+}
 .slide-fade-leave-active {
   transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
 }
@@ -1043,5 +1181,8 @@ textarea::placeholder {
   svg {
     transform: rotate(270deg);
   }
+}
+.wrong {
+  border-color: red;
 }
 </style>

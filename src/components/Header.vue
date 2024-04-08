@@ -46,6 +46,13 @@
         </div>
       </div> -->
       <div class="header-icons-section">
+        <router-link
+          v-if="userRole == 'ADMIN'"
+          to="/admin-panel"
+          style="display: flex"
+        >
+          <AdminSvg style="cursor: pointer" />
+        </router-link>
         <HeaderLoginIcon
           v-if="!isLoggedIn"
           @click="openRegistration"
@@ -57,6 +64,7 @@
           v-else
           @click.prevent="toggleDropdown"
         />
+
         <Transition name="slide-fade"
           ><div
             class="drop-down"
@@ -180,6 +188,7 @@ import {
   HeaderBasketIcon,
   HeaderHeartIcon,
   HeaderMyProfileIcon,
+  AdminSvg,
 } from "./UI";
 export default {
   data() {
@@ -203,6 +212,7 @@ export default {
     RegistrationMenu,
     HeaderMyProfileIcon,
     MoreIconSvg,
+    AdminSvg,
   },
   methods: {
     ...mapActions(["getUserInfoRequest"]),
@@ -239,6 +249,9 @@ export default {
   computed: {
     isLoggedIn: function () {
       return this.$store.getters.isLoggedIn;
+    },
+    userRole() {
+      return this.$store.getters.getUserRole;
     },
   },
 };
@@ -416,6 +429,7 @@ export default {
   justify-content: space-between;
   width: 10%;
   margin-right: 10px;
+  align-items: center;
 }
 .logo-section {
   width: 20%;

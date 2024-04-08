@@ -25,7 +25,14 @@
             :key="item.id"
           >
             <router-link
-              style="color: inherit; text-decoration: none"
+              style="
+                transition: 0.5s;
+                color: inherit;
+                text-decoration: none;
+                max-height: 350px;
+                overflow: hidden;
+              "
+              :class="{ moreMain: showDescription == true }"
               :to="'/catalog/product/' + item.id"
             >
               <img v-if="item.image" :src="item.image" class="item_image" />
@@ -101,6 +108,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
+
 .bottom_buttons {
   display: flex;
   gap: 12px;
@@ -159,6 +167,7 @@ export default {
   overflow: hidden;
   max-height: 150px;
   transition: 0.5s;
+  min-height: 200px;
 }
 
 .item_company {
@@ -251,6 +260,9 @@ export default {
   flex-direction: column;
 }
 .more {
-  max-height: 300px;
+  max-height: 200px;
+}
+.moreMain {
+  max-height: 500px !important;
 }
 </style>

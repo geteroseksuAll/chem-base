@@ -71,7 +71,8 @@
                         class="minus"
                         id="plus"
                         @click="
-                          if (item.count > 1) {
+                          console.log(item);
+                          if (item.orderDTO.productCount > 1) {
                             setItemAmountMethod(
                               item.orderDTO.productDTO.id,
                               parseInt(item.orderDTO.productCount) - 1
