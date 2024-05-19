@@ -67,7 +67,7 @@ export default {
         const token = response.data.token;
         const userData = response.data.user;
         localStorage.setItem("token", token);
-
+            
         commit("auth_success", token, userData);
         return response;
       } catch (error) {

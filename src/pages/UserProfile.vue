@@ -252,7 +252,11 @@
                   </div>
                 </transition>
                 <div
-                  v-if="setProductSubSubCategory"
+                  v-if="
+                    setProductSubSubCategory &&
+                    this.$store.getters.getSubSubCategoriesList
+                      .subsubcategoryDTOList?.length > 0
+                  "
                   ref="setCategory"
                   class="select_block"
                   @click="setSubSubCategory = !setSubSubCategory"
@@ -641,8 +645,16 @@ export default {
       this.subSubCategoryName = "Не задано";
       this.setProductSubSubCategory = true;
       this.getSubSubCategoriesListRequest({ name: item.commandName });
+      if (
+        this.$store.getters.getSubSubCategoriesList.subsubcategoryDTOList
+          .length == 0
+      ) {
+        this.subSubCategory = item;
+        console.log(this.subSubCategory);
+      }
     },
     setNewProductSubSubCategory(item) {
+      console.log(item);
       this.setSubSubCategory = !this.setSubSubCategory;
       this.subSubCategoryName = item.russianName;
       this.subSubCategory = item;
@@ -679,7 +691,6 @@ export default {
         description: this.newItemDescription,
         subsubcategoryDTO: this.subSubCategory,
       };
-      console.log(params.subsubcategoryDTO);
       if (
         this.mainCategoryName != null &&
         this.subCategoryName != null &&
@@ -729,12 +740,6 @@ export default {
     filterStr() {
       if (this.lastName) {
         this.lastName = this.lastName.replace(/[^a-zа-яё\s]/gi, "");
-      }
-      if (this.newItemCas) {
-        this.newItemCas = this.newItemCas.match(/\d+/g);
-        if (this.newItemCas) {
-          this.newItemCas = this.newItemCas.join("");
-        }
       }
       if (this.newItemMolecularWeight) {
         this.newItemMolecularWeight = this.newItemMolecularWeight.match(/\d+/g);
